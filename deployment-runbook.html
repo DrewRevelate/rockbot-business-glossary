@@ -281,6 +281,333 @@
       gap: var(--space-2);
       margin: var(--space-2) 0;
     }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       RESPONSIVE - Deployment Runbook Page
+       ═══════════════════════════════════════════════════════════════════ */
+
+    /* Large Tablet (992px - 1199px) */
+    @media (max-width: 1199px) {
+      .container--narrow {
+        max-width: 100%;
+        padding: 0 var(--space-5);
+      }
+    }
+
+    /* Tablet (768px - 991px) */
+    @media (max-width: 991px) {
+      .phase-card__header {
+        padding: var(--space-4);
+      }
+
+      .phase-card__number {
+        width: 36px;
+        height: 36px;
+        font-size: var(--text-sm);
+      }
+
+      .phase-card__title {
+        font-size: var(--text-sm);
+      }
+
+      .phase-card__content {
+        padding: var(--space-4);
+      }
+
+      .diagram {
+        font-size: 0.75rem;
+        padding: var(--space-4);
+      }
+
+      .sandbox-config__label {
+        min-width: 100%;
+      }
+
+      .sandbox-config__content {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .sandbox-config__save {
+        align-self: flex-start;
+      }
+    }
+
+    /* Mobile (768px and below) */
+    @media (max-width: 768px) {
+      .runbook-section {
+        scroll-margin-top: 100px;
+      }
+
+      .container--narrow {
+        padding: 0 var(--space-4);
+      }
+
+      .phase-card {
+        margin-bottom: var(--space-4);
+      }
+
+      .phase-card__header {
+        padding: var(--space-3);
+        gap: var(--space-3);
+      }
+
+      .phase-card__number {
+        width: 32px;
+        height: 32px;
+        font-size: var(--text-xs);
+        border-radius: 6px;
+      }
+
+      .phase-card__title {
+        font-size: var(--text-sm);
+      }
+
+      .phase-card__description {
+        font-size: var(--text-xs);
+      }
+
+      .phase-card__content {
+        padding: var(--space-3);
+      }
+
+      .command-block {
+        padding: var(--space-3);
+        font-size: 0.6875rem;
+        margin: var(--space-2) 0;
+        border-radius: 4px;
+      }
+
+      .sub-section {
+        padding: var(--space-3);
+        margin: var(--space-2) 0;
+      }
+
+      .sub-section__title {
+        font-size: var(--text-xs);
+      }
+
+      .validation-step {
+        padding: var(--space-2);
+        gap: var(--space-2);
+      }
+
+      .validation-step__title {
+        font-size: var(--text-xs);
+      }
+
+      .critical-box,
+      .warning-box,
+      .info-box,
+      .rollback-warning {
+        padding: var(--space-3);
+        margin: var(--space-2) 0;
+      }
+
+      .critical-box__title,
+      .rollback-warning__title {
+        font-size: var(--text-xs);
+      }
+
+      .checkpoint {
+        padding: var(--space-3);
+        margin: var(--space-4) 0;
+      }
+
+      .checkpoint__title {
+        font-size: var(--text-xs);
+      }
+
+      .sandbox-config {
+        padding: var(--space-3);
+      }
+
+      .sandbox-config__header {
+        margin-bottom: var(--space-2);
+      }
+
+      .sandbox-config__icon {
+        font-size: var(--text-sm);
+      }
+
+      .sandbox-config__title {
+        font-size: var(--text-xs);
+      }
+
+      .sandbox-config__label {
+        font-size: var(--text-xs);
+        min-width: 100%;
+      }
+
+      .sandbox-config__input {
+        font-size: var(--text-xs);
+        padding: var(--space-2);
+      }
+
+      .sandbox-config__save {
+        width: 100%;
+        padding: var(--space-2);
+        font-size: var(--text-xs);
+      }
+
+      .sandbox-config__hint {
+        font-size: 0.625rem;
+      }
+
+      .sf-link {
+        padding: 3px 6px;
+        font-size: 0.625rem;
+      }
+
+      .sf-nav-group {
+        gap: var(--space-1);
+      }
+
+      /* Diagram - Horizontal scroll on mobile */
+      .diagram {
+        font-size: 0.625rem;
+        padding: var(--space-3);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Metric cards */
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-2);
+      }
+
+      .metric-card {
+        padding: var(--space-3);
+      }
+
+      .metric-card__value {
+        font-size: var(--text-xl);
+      }
+
+      .metric-card__label {
+        font-size: 0.5625rem;
+      }
+
+      /* Timeline table */
+      .table-wrapper {
+        margin: 0 calc(-1 * var(--space-4));
+        padding: 0 var(--space-4);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table {
+        font-size: var(--text-xs);
+        min-width: 400px;
+      }
+
+      /* Checklist on mobile */
+      .checklist__item {
+        padding: var(--space-2) 0;
+      }
+
+      .checklist__checkbox {
+        width: 16px;
+        height: 16px;
+      }
+
+      .checklist__text {
+        font-size: var(--text-xs);
+      }
+    }
+
+    /* Small Mobile (480px and below) */
+    @media (max-width: 480px) {
+      .container--narrow {
+        padding: 0 var(--space-3);
+      }
+
+      .phase-card__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+      }
+
+      .phase-card__number {
+        width: 28px;
+        height: 28px;
+        font-size: 0.6875rem;
+      }
+
+      .command-block {
+        font-size: 0.625rem;
+        line-height: 1.5;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .metric-card__value {
+        font-size: var(--text-lg);
+      }
+
+      .diagram {
+        font-size: 0.5625rem;
+      }
+    }
+
+    /* Touch-friendly targets */
+    @media (hover: none) and (pointer: coarse) {
+      .checklist__checkbox {
+        min-width: 44px;
+        min-height: 44px;
+      }
+
+      .checklist__item {
+        min-height: 48px;
+      }
+
+      .sf-link {
+        min-height: 36px;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .sandbox-config__save {
+        min-height: 44px;
+      }
+    }
+
+    /* Landscape mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .section {
+        padding: var(--space-6) 0;
+      }
+
+      .phase-card {
+        margin-bottom: var(--space-3);
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      .sandbox-config,
+      .progress-bar,
+      .sf-link {
+        display: none !important;
+      }
+
+      .phase-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .checkpoint {
+        break-inside: avoid;
+      }
+
+      .command-block {
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+    }
   </style>
 </head>
 <body>
