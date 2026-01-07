@@ -1075,8 +1075,6 @@ pre code {
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
-  justify-content: center;
-  flex: 1;
 }
 
 .secondary-nav__pill {
