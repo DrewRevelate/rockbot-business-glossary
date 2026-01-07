@@ -197,91 +197,115 @@ small {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   NAVIGATION
+   UNIFIED SITE HEADER
+   Combines logo, page title, and navigation in one cohesive component
    ───────────────────────────────────────────────────────────────────────────── */
-.nav {
+.site-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--color-bg-primary);
   border-bottom: 1px solid var(--color-border);
-  padding: var(--space-3) 0;
 }
 
-.nav__inner {
+.site-header__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: var(--space-4) 0;
   gap: var(--space-4);
 }
 
-.nav__brand {
+.site-header__brand {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  font-weight: 600;
-  font-size: var(--text-sm);
-  color: var(--color-text-primary);
-  white-space: nowrap;
+  gap: var(--space-4);
   text-decoration: none;
-}
-
-.nav__brand:hover {
-  color: var(--color-pulse);
-}
-
-.nav__brand svg {
-  height: 28px;
-  width: auto;
   flex-shrink: 0;
 }
 
-.nav__brand-text {
+.site-header__logo {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.site-header__title-group {
   display: flex;
   flex-direction: column;
+  gap: 2px;
+}
+
+.site-header__company {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-pulse);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.site-header__page-title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
   line-height: 1.2;
 }
 
-.nav__brand-name {
-  font-weight: 700;
-  color: var(--color-pulse);
-}
-
-.nav__brand-tagline {
-  font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--color-text-secondary);
-}
-
-.nav__links {
+.site-header__nav {
   display: flex;
-  gap: var(--space-1);
-  list-style: none;
+  align-items: center;
+  gap: var(--space-2);
 }
 
-.nav__link {
-  padding: var(--space-2) var(--space-3);
+.site-header__link {
+  padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--color-text-secondary);
+  text-decoration: none;
   transition: all var(--transition-fast);
   white-space: nowrap;
 }
 
-.nav__link:hover {
+.site-header__link:hover {
   color: var(--color-text-primary);
-  background: var(--color-bg-hover);
+  background: var(--color-bg-secondary);
 }
 
-.nav__link--active {
-  color: var(--color-text-inverse);
-  background: var(--color-pulse);
+.site-header__link--active {
+  color: var(--color-pulse);
+  background: rgba(50, 4, 173, 0.08);
 }
 
-.nav__link--active:hover {
-  color: var(--color-text-inverse);
-  background: var(--color-pulse-light);
+.site-header__link--active:hover {
+  background: rgba(50, 4, 173, 0.12);
+}
+
+/* Mobile menu toggle */
+.site-header__menu-toggle {
+  display: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.site-header__menu-toggle span {
+  display: block;
+  width: 16px;
+  height: 2px;
+  background: var(--color-text-primary);
+  border-radius: 1px;
+  transition: all var(--transition-fast);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -871,64 +895,21 @@ pre code {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   UNIFIED PAGE HEADER (v4.0 - Minimal Design)
-   Simplified: subtle background, compact sizing
+   LEGACY PAGE HEADER (kept for backward compatibility)
    ───────────────────────────────────────────────────────────────────────────── */
 .page-header {
-  background: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border);
-  padding: var(--space-5) 0;
-}
-
-.page-header__content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-}
-
-.page-header__text {
-  flex: 1;
-}
-
-.page-header__title {
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--color-text-primary);
-  letter-spacing: -0.01em;
-  margin-bottom: var(--space-1);
-}
-
-.page-header__subtitle {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  line-height: 1.4;
-}
-
-.page-header__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-1) var(--space-3);
-  background: var(--color-pulse);
-  color: var(--color-text-inverse);
-  border-radius: var(--radius-md);
-  font-size: var(--text-xs);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  flex-shrink: 0;
+  display: none; /* Hidden - now using unified site-header */
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   UNIFIED SECONDARY NAV (v4.0 - Section Navigation Only)
-   Simplified: removed brand/logo (now in main nav), just section links
+   SECONDARY NAV (Section Navigation)
+   Sits below the unified site header
    ───────────────────────────────────────────────────────────────────────────── */
 .secondary-nav {
   position: sticky;
-  top: 57px;
+  top: 68px; /* Height of site-header */
   z-index: 90;
-  background: var(--color-bg-primary);
+  background: var(--color-bg-secondary);
   border-bottom: 1px solid var(--color-border);
   padding: 0;
 }
@@ -940,8 +921,8 @@ pre code {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--space-6);
-  min-height: 44px;
-  gap: var(--space-4);
+  min-height: 40px;
+  gap: var(--space-2);
 }
 
 /* Unified horizontal navigation - works for both pages */
@@ -1124,6 +1105,15 @@ pre code {
 
 /* Tablet (768px - 991px) */
 @media (max-width: 991px) {
+  /* Site Header */
+  .site-header__nav {
+    display: none;
+  }
+
+  .site-header__menu-toggle {
+    display: flex;
+  }
+
   .secondary-nav__links {
     display: none;
   }
@@ -1155,52 +1145,36 @@ pre code {
 
 /* Mobile/Small Tablet (768px and below) */
 @media (max-width: 768px) {
-  /* Navigation */
-  .nav {
-    padding: var(--space-2) 0;
-  }
-
-  .nav__inner {
-    gap: var(--space-3);
-  }
-
   .container {
     padding: 0 var(--space-4);
   }
 
-  /* Page Header */
-  .page-header {
-    padding: var(--space-4) 0;
+  /* Site Header */
+  .site-header__top {
+    padding: var(--space-3) 0;
   }
 
-  .page-header__content {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-3);
+  .site-header__logo {
+    width: 32px;
+    height: 32px;
   }
 
-  .page-header__title {
-    font-size: var(--text-base);
-  }
-
-  .page-header__subtitle {
-    font-size: var(--text-xs);
-  }
-
-  .page-header__badge {
+  .site-header__company {
     font-size: 0.625rem;
-    padding: var(--space-1) var(--space-2);
+  }
+
+  .site-header__page-title {
+    font-size: var(--text-base);
   }
 
   /* Secondary Nav */
   .secondary-nav {
-    top: 49px;
+    top: 56px;
   }
 
   .secondary-nav__inner {
     padding: 0 var(--space-4);
-    gap: var(--space-3);
-    min-height: 40px;
+    min-height: 36px;
   }
 
   .secondary-nav__pills {
@@ -1308,42 +1282,42 @@ pre code {
     padding: 0 var(--space-3);
   }
 
-  .nav__brand {
-    gap: var(--space-2);
+  /* Site Header */
+  .site-header__top {
+    padding: var(--space-2) 0;
+    gap: var(--space-3);
   }
 
-  .nav__brand svg {
-    height: 24px;
+  .site-header__brand {
+    gap: var(--space-3);
   }
 
-  .nav__brand-tagline {
+  .site-header__logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .site-header__company {
     display: none;
   }
 
-  .nav__link {
-    padding: var(--space-1) var(--space-2);
-    font-size: var(--text-xs);
-  }
-
-  .page-header {
-    padding: var(--space-3) 0;
-  }
-
-  .page-header__title {
+  .site-header__page-title {
     font-size: var(--text-sm);
   }
 
-  .page-header__badge {
-    display: none;
+  .site-header__menu-toggle {
+    width: 32px;
+    height: 32px;
   }
 
+  /* Secondary Nav */
   .secondary-nav {
-    top: 45px;
+    top: 48px;
   }
 
   .secondary-nav__inner {
     padding: 0 var(--space-3);
-    min-height: 40px;
+    min-height: 34px;
   }
 
   .metrics-grid {
@@ -1433,17 +1407,11 @@ pre code {
 
 /* Print styles */
 @media print {
-  .nav,
+  .site-header,
   .secondary-nav,
   .floating-actions,
   .back-to-top {
     display: none !important;
-  }
-
-  .page-header {
-    background: var(--color-pulse) !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
   }
 
   .container {
