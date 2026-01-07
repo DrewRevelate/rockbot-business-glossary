@@ -779,8 +779,9 @@ pre code {
    RESPONSIVE ADJUSTMENTS
    ───────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
+  /* Keep nav links visible on mobile for cross-page navigation */
   .nav__links {
-    display: none;
+    gap: var(--space-1);
   }
 
   .hero-metric__value {
