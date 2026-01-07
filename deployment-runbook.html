@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Full Copy Deployment Guide | Rockbot Revenue Architecture</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    .runbook-nav {
+      position: sticky;
+      top: 60px;
+      background: var(--color-bg-primary);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-3) 0;
+      z-index: 50;
+    }
+    .runbook-nav__inner {
+      display: flex;
+      gap: var(--space-2);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .runbook-nav__link {
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      background: var(--color-bg-secondary);
+      transition: all var(--transition-fast);
+    }
+    .runbook-nav__link:hover {
+      background: var(--color-info-bg);
+      color: var(--color-pulse);
+    }
+    .runbook-section {
+      scroll-margin-top: 140px;
+    }
+    .phase-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      margin-bottom: var(--space-6);
+      overflow: hidden;
+    }
+    .phase-card__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-6);
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .phase-card__number {
+      width: 48px;
+      height: 48px;
+      background: var(--color-pulse);
+      color: white;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: var(--text-lg);
+      flex-shrink: 0;
+    }
+    .phase-card__title {
+      font-size: var(--text-lg);
+      font-weight: 600;
+    }
+    .phase-card__description {
+      color: var(--color-text-secondary);
+      font-size: var(--text-sm);
+    }
+    .phase-card__content {
+      padding: var(--space-6);
+    }
+    .command-block {
+      background: #1a1a2e;
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin: var(--space-4) 0;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: #a0aec0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .command-block__prompt {
+      color: #68d391;
+    }
+    .command-block__comment {
+      color: #718096;
+    }
+    .prereq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+    @media (max-width: 768px) {
+      .prereq-grid { grid-template-columns: 1fr; }
+    }
+    .validation-step {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: var(--color-bg-secondary);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-3);
+    }
+    .validation-step__status {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+    .validation-step__content { flex: 1; }
+    .validation-step__title {
+      font-weight: 500;
+      margin-bottom: var(--space-1);
+    }
+    .validation-step__description {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+    .rollback-warning {
+      background: var(--color-error-bg);
+      border: 1px solid var(--color-error);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      margin: var(--space-5) 0;
+    }
+    .rollback-warning__title {
+      color: var(--color-error);
+      font-weight: 700;
+      font-size: var(--text-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-3);
+    }
+    .critical-box {
+      background: var(--color-error-bg);
+      border: 2px solid var(--color-error);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      margin: var(--space-4) 0;
+    }
+    .critical-box__title {
+      color: var(--color-error);
+      font-weight: 700;
+      margin-bottom: var(--space-3);
+    }
+    .warning-box {
+      background: var(--color-warning-bg);
+      border: 1px solid var(--color-warning);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin: var(--space-4) 0;
+    }
+    .info-box {
+      background: var(--color-info-bg);
+      border: 1px solid var(--color-pulse);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin: var(--space-4) 0;
+    }
+    .checkpoint {
+      background: linear-gradient(135deg, var(--color-bg-card) 0%, var(--color-info-bg) 100%);
+      border: 2px solid var(--color-pulse);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      margin: var(--space-6) 0;
+    }
+    .checkpoint__title {
+      color: var(--color-pulse);
+      font-weight: 700;
+      margin-bottom: var(--space-3);
+    }
+    .sub-section {
+      border-left: 3px solid var(--color-border);
+      padding-left: var(--space-4);
+      margin: var(--space-4) 0;
+    }
+    .sub-section__title {
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    /* Sandbox Configuration */
+    .sandbox-config {
+      background: var(--color-bg-card);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+    }
+    .sandbox-config__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+    }
+    .sandbox-config__icon { font-size: var(--text-xl); }
+    .sandbox-config__title {
+      font-weight: 600;
+      font-size: var(--text-sm);
+    }
+    .sandbox-config__content {
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .sandbox-config__label {
+      flex: 1;
+      min-width: 300px;
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+    .sandbox-config__input {
+      display: block;
+      width: 100%;
+      margin-top: var(--space-1);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      background: var(--color-bg-primary);
+    }
+    .sandbox-config__input:focus {
+      outline: none;
+      border-color: var(--color-pulse);
+      box-shadow: 0 0 0 3px rgba(50, 4, 173, 0.1);
+    }
+    .sandbox-config__save {
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-pulse);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .sandbox-config__save:hover {
+      background: #2a03a3;
+    }
+    .sandbox-config__status {
+      font-size: var(--text-sm);
+      color: var(--color-success);
+    }
+    .sandbox-config__hint {
+      margin-top: var(--space-3);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    /* Salesforce Links */
+    .sf-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-1) var(--space-2);
+      background: var(--color-info-bg);
+      border: 1px solid var(--color-pulse);
+      border-radius: var(--radius-sm);
+      color: var(--color-pulse);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      text-decoration: none;
+      transition: all var(--transition-fast);
+    }
+    .sf-link:hover {
+      background: var(--color-pulse);
+      color: white;
+    }
+    .sf-link--disabled {
+      background: var(--color-bg-secondary);
+      border-color: var(--color-border);
+      color: var(--color-text-muted);
+      cursor: not-allowed;
+    }
+    .sf-link--disabled:hover {
+      background: var(--color-bg-secondary);
+      color: var(--color-text-muted);
+    }
+    .sf-link__icon { font-size: 12px; }
+    .sf-nav-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin: var(--space-3) 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <div class="nav__inner">
+        <div class="nav__brand">
+          <span class="nav__brand-accent">Rockbot</span> Revenue Architecture
+        </div>
+        <ul class="nav__links">
+          <li><a href="index.html" class="nav__link">Glossary</a></li>
+          <li><a href="deployment-runbook.html" class="nav__link nav__link--active">Deployment</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Runbook Quick Nav -->
+  <div class="runbook-nav">
+    <div class="container">
+      <div class="runbook-nav__inner">
+        <a href="#overview" class="runbook-nav__link">Overview</a>
+        <a href="#pre-deployment" class="runbook-nav__link">Pre-Deploy</a>
+        <a href="#phase1" class="runbook-nav__link">Phase 1</a>
+        <a href="#phase2" class="runbook-nav__link">Phase 2</a>
+        <a href="#phase3" class="runbook-nav__link">Phase 3</a>
+        <a href="#phase4" class="runbook-nav__link">Phase 4</a>
+        <a href="#phase5" class="runbook-nav__link">Phase 5</a>
+        <a href="#phase6" class="runbook-nav__link">Phase 6</a>
+        <a href="#phase7" class="runbook-nav__link">Phase 7</a>
+        <a href="#phase8" class="runbook-nav__link">Phase 8</a>
+        <a href="#phase9" class="runbook-nav__link">Phase 9</a>
+        <a href="#phase10" class="runbook-nav__link">Phase 10</a>
+        <a href="#rollback" class="runbook-nav__link">Rollback</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="section runbook-section" id="overview" style="padding-top: var(--space-12);">
+    <div class="container container--narrow">
+      <div class="text-center">
+        <span class="badge badge--info mb-4" style="display: inline-flex;">
+          <span class="badge__dot"></span>
+          Full Copy Deployment Guide
+        </span>
+        <h1 class="mb-4">Revenue Architecture Deployment</h1>
+        <p class="hero__subtitle" style="max-width: 700px; margin: 0 auto;">
+          Complete 10-phase deployment and data migration guide. Based on RB_Partial testing (Dec 17-28, 2025).
+        </p>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="metrics-grid" style="margin-top: var(--space-10);">
+        <div class="metric-card">
+          <div class="metric-card__value">95</div>
+          <div class="metric-card__label">Apex Classes</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__value">3</div>
+          <div class="metric-card__label">Triggers</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__value">4</div>
+          <div class="metric-card__label">Flows</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__value">~220</div>
+          <div class="metric-card__label">Components</div>
+        </div>
+      </div>
+
+      <!-- Sandbox Configuration -->
+      <div class="sandbox-config" style="margin-top: var(--space-8);">
+        <div class="sandbox-config__header">
+          <span class="sandbox-config__icon">⚙️</span>
+          <span class="sandbox-config__title">Sandbox Configuration</span>
+        </div>
+        <div class="sandbox-config__content">
+          <label class="sandbox-config__label">
+            Salesforce Sandbox URL:
+            <input type="text" id="sandbox-url" class="sandbox-config__input"
+                   placeholder="https://rockbot--fullcopy.sandbox.lightning.force.com"
+                   value="">
+          </label>
+          <button id="save-sandbox-url" class="sandbox-config__save">Save URL</button>
+          <span id="sandbox-url-status" class="sandbox-config__status"></span>
+        </div>
+        <p class="sandbox-config__hint">Enter your sandbox URL to enable clickable links to Salesforce Setup pages.</p>
+      </div>
+
+      <!-- Critical Order Diagram -->
+      <div class="diagram" style="margin-top: var(--space-8);">
+<span class="diagram__title">DEPLOYMENT ORDER MATTERS!</span>
+
+Phase 1: METADATA DEPLOYMENT
+    ↓ (Objects, Fields, Classes, Triggers must exist first)
+Phase 2: FLOW DEACTIVATION
+    ↓ (Prevent CPU timeouts during bulk ops)
+Phase 3: DATA BACKFILL (Website_Root__c)
+    ↓ (Required for domain matching)
+Phase 4: PHYSICAL LOCATION IMPORT  ← ⭐ BEFORE Merges!
+    ↓ (Locations must exist so they reparent during merge)
+Phase 5: FRANCHISOR ACCOUNT MIGRATION
+    ↓ (Create operator accounts so they can be linked)
+Phase 6: DOMAIN CREATION & ACCOUNT MERGING
+    ↓ (Domains link accounts; merges consolidate duplicates)
+Phase 7: FRANCHISOR LINKING
+    ↓ (Physical_Location.Franchisor__c populated)
+Phase 8: VALIDATION
+    ↓ (Verify data integrity)
+Phase 9: SCHEDULE BATCH JOBS
+    ↓ (Enable ongoing maintenance)
+Phase 10: RE-ACTIVATE FLOWS & GO-LIVE
+      </div>
+
+      <!-- Timeline Table -->
+      <div class="card mt-8">
+        <h4 class="mb-4">Estimated Timeline</h4>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Description</th>
+                <th>Duration</th>
+                <th>Cumulative</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Metadata Deployment</td><td>1 hour</td><td>1 hour</td></tr>
+              <tr><td>2</td><td>Flow Deactivation</td><td>15 min</td><td>1.25 hours</td></tr>
+              <tr><td>3</td><td>Data Backfill</td><td>2 hours</td><td>3.25 hours</td></tr>
+              <tr><td>4</td><td>Physical Locations</td><td>3 hours</td><td>6.25 hours</td></tr>
+              <tr><td>5</td><td>Franchisor Migration</td><td>2 hours</td><td>8.25 hours</td></tr>
+              <tr><td>6</td><td>Domains & Merging</td><td>4 hours</td><td>12.25 hours</td></tr>
+              <tr><td>7</td><td>Franchisor Linking</td><td>1 hour</td><td>13.25 hours</td></tr>
+              <tr><td>8</td><td>Validation</td><td>2 hours</td><td>15.25 hours</td></tr>
+              <tr><td>9</td><td>Schedule Jobs</td><td>30 min</td><td>15.75 hours</td></tr>
+              <tr><td>10</td><td>Go-Live</td><td>30 min</td><td>16.25 hours</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-muted mt-4" style="font-size: var(--text-sm);"><strong>Recommended:</strong> Execute over 2-3 days, not a single marathon session.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pre-Deployment -->
+  <section class="section runbook-section" id="pre-deployment" style="background: var(--color-bg-secondary);">
+    <div class="container">
+      <h2 class="mb-8">Pre-Deployment Checklist</h2>
+
+      <div class="prereq-grid">
+        <div class="card">
+          <h4 class="mb-4">Environment Verification</h4>
+          <ul class="checklist">
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Full Copy sandbox refreshed from production</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Sandbox login credentials verified</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">SF CLI authenticated: <code>sf org list</code></span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Production admin access confirmed</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h4 class="mb-4">Source Files Verified</h4>
+          <ul class="checklist">
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text"><code>deploy/force-app/</code> contains all metadata</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text"><code>deploy/manifest/package.xml</code> is current</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Migration scripts available</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Data mapping files prepared</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 1: Metadata Deployment -->
+  <section class="section runbook-section" id="phase1">
+    <div class="container">
+      <h2 class="mb-8">Phase 1: Metadata Deployment</h2>
+
+      <!-- Pre-Deployment Org Prep -->
+      <div class="critical-box">
+        <div class="critical-box__title">CRITICAL: Prepare Target Org First</div>
+        <p>The target org has configurations that will cause test failures during deployment validation. These must be temporarily modified BEFORE deployment.</p>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">1.1</div>
+          <div>
+            <div class="phase-card__title">Check Account Duplicate Rules</div>
+            <div class="phase-card__description">Record active rules; deactivate only if tests fail with DUPLICATES_DETECTED</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="info-box">
+            <p><strong>Try validation first!</strong> Only deactivate rules that cause <code>DUPLICATES_DETECTED</code> errors during test execution. You may not need to deactivate any.</p>
+          </div>
+          <div class="sf-nav-group">
+            <a href="#" class="sf-link sf-link--disabled" data-sf-path="/lightning/setup/DuplicateRules/home" target="_blank">
+              <span class="sf-link__icon">↗</span> Open Duplicate Rules
+            </a>
+          </div>
+          <div class="sub-section">
+            <div class="sub-section__title">Step 1: Check active Account duplicate rules</div>
+            <div class="command-block"><span class="command-block__comment">-- Run in Developer Console to see what's active:</span>
+SELECT Id, DeveloperName, SObjectType, IsActive
+FROM DuplicateRule
+WHERE SObjectType = 'Account' AND IsActive = true</div>
+          </div>
+          <div class="sub-section">
+            <div class="sub-section__title">Step 2: Record which rules are active (for re-enabling in Phase 10)</div>
+            <ul class="checklist mt-2">
+              <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Active rules recorded: __________</span></li>
+            </ul>
+          </div>
+          <div class="sub-section">
+            <div class="sub-section__title">Step 3: After validation attempt, deactivate ONLY rules that blocked tests</div>
+            <ul class="checklist mt-2">
+              <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Rule 1: __________ - DEACTIVATED at __________</span></li>
+              <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Rule 2: __________ - DEACTIVATED at __________ (if needed)</span></li>
+              <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">No deactivation needed (validation passed)</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">1.2</div>
+          <div>
+            <div class="phase-card__title">Validate Deployment Package</div>
+            <div class="phase-card__description">Run validation with tests (now that org is prepared)</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="command-block"><span class="command-block__prompt">$</span> cd /path/to/rockbot-data/deploy
+
+<span class="command-block__prompt">$</span> sf project deploy validate --manifest manifest/package.xml -o &lt;FULLCOPY_ALIAS&gt; --test-level RunLocalTests --wait 60</div>
+          <p class="text-muted"><strong>Expected:</strong> All components validate successfully, tests pass with 75%+ coverage.</p>
+          <div class="warning-box">
+            <p><strong>If tests still fail:</strong> Check Apex Jobs → View errors. Common issues:</p>
+            <ul style="margin: var(--space-2) 0 0 var(--space-5);">
+              <li><code>DUPLICATES_DETECTED</code> → Deactivate blocking duplicate rules (Step 1.1)</li>
+              <li>Field type mismatch → Check NetSuite field references</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">1.3</div>
+          <div>
+            <div class="phase-card__title">Deploy Metadata</div>
+            <div class="phase-card__description">Deploy with manifest (precisely controlled)</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="command-block"><span class="command-block__comment"># Option A: Deploy with manifest (RECOMMENDED)</span>
+<span class="command-block__prompt">$</span> sf project deploy start --manifest manifest/package.xml -o &lt;FULLCOPY_ALIAS&gt; --test-level RunLocalTests --wait 60
+
+<span class="command-block__comment"># Option B: Deploy with NoTestRun (if tests already validated)</span>
+<span class="command-block__prompt">$</span> sf project deploy start --manifest manifest/package.xml -o &lt;FULLCOPY_ALIAS&gt; --test-level NoTestRun --wait 30</div>
+          <div class="card mt-4">
+            <h5 class="mb-2">Expected Results:</h5>
+            <ul style="margin: 0; padding-left: var(--space-5);">
+              <li>95 Apex classes deployed</li>
+              <li>3 triggers deployed (AccountTrigger, DomainTrigger, NetSuiteBillingAccountTrigger)</li>
+              <li>4 flows deployed</li>
+              <li>Custom objects with fields (Domain__c, Physical_Location__c, Account_Hierarchy__c, Automation_Settings__c)</li>
+              <li>8 permission sets deployed</li>
+              <li>3 LWC components deployed</li>
+              <li>All tests pass (75%+ coverage)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">1.4</div>
+          <div>
+            <div class="phase-card__title">Manual Validation Rule (INACTIVE)</div>
+            <div class="phase-card__description">Cannot deploy via Metadata API (uses MasterRecordId)</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="warning-box">
+            <p><strong>IMPORTANT:</strong> The <code>Prevent_Cross_RecordType_Merge</code> validation rule cannot be deployed via Metadata API because it uses <code>MasterRecordId</code> - a system field only available during merge operations.</p>
+          </div>
+          <p><strong>Create manually in target org (but leave INACTIVE for now):</strong></p>
+          <div class="sf-nav-group">
+            <a href="#" class="sf-link sf-link--disabled" data-sf-path="/lightning/setup/ObjectManager/Account/ValidationRules/view" target="_blank">
+              <span class="sf-link__icon">↗</span> Open Account Validation Rules
+            </a>
+          </div>
+          <ol style="margin: var(--space-4) 0; padding-left: var(--space-5);">
+            <li>Click "New" to create validation rule</li>
+            <li>Rule Name: <code>Prevent_Cross_RecordType_Merge</code></li>
+            <li>Active: ❌ <strong>(UNCHECKED - activate in Phase 10)</strong></li>
+            <li>Description: <code>Prevents cross-RecordType merges. Franchisor accounts must NOT merge with Brand accounts.</code></li>
+          </ol>
+          <div class="command-block"><span class="command-block__comment">Error Condition Formula:</span>
+AND(
+    NOT(ISBLANK(MasterRecordId)),
+    RecordTypeId &lt;&gt; MasterRecord.RecordTypeId
+)</div>
+          <p><strong>Error Message:</strong> <code>Cannot merge accounts with different Record Types. Brand accounts cannot be merged with Franchisor accounts.</code></p>
+          <p><strong>Error Location:</strong> Field → RecordTypeId</p>
+          <ul class="checklist mt-4">
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Prevent_Cross_RecordType_Merge validation rule created (INACTIVE) at __________</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">1.5</div>
+          <div>
+            <div class="phase-card__title">Disable Automation Settings (for data migration)</div>
+            <div class="phase-card__description">Turn OFF automations before bulk data operations</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="critical-box">
+            <div class="critical-box__title">CRITICAL</div>
+            <p>Now that deployment is complete, DISABLE all automations before starting data migration (Phases 3-8). This prevents triggers from firing during bulk operations. They will be re-enabled in Phase 10.</p>
+          </div>
+          <div class="sf-nav-group">
+            <a href="#" class="sf-link sf-link--disabled" data-sf-path="/lightning/setup/CustomSettings/home" target="_blank">
+              <span class="sf-link__icon">↗</span> Custom Settings
+            </a>
+            <a href="#" class="sf-link sf-link--disabled" data-sf-path="/_ui/common/apex/debug/ApexCSIPage" target="_blank">
+              <span class="sf-link__icon">↗</span> Developer Console
+            </a>
+          </div>
+          <p><strong>Run in Developer Console → Execute Anonymous:</strong></p>
+          <div class="command-block"><span class="command-block__comment">// Create org-wide default with all automations DISABLED</span>
+<span class="command-block__comment">// These will be enabled in Phase 10 after data migration</span>
+Automation_Settings__c settings = Automation_Settings__c.getOrgDefaults();
+if (settings.Id == null) {
+    settings = new Automation_Settings__c(SetupOwnerId = UserInfo.getOrganizationId());
+}
+settings.All_Automations_Enabled__c = false;
+settings.Triggers_Enabled__c = false;
+settings.Batch_Jobs_Enabled__c = false;
+settings.Scheduled_Jobs_Enabled__c = false;
+settings.Queueable_Jobs_Enabled__c = false;
+settings.Account_Trigger_Enabled__c = false;
+settings.Domain_Trigger_Enabled__c = false;
+settings.Account_Delete_Protection_Enabled__c = false;
+settings.Domain_Validation_Batch_Enabled__c = false;
+settings.Billing_Account_Location_Link_Enabled__c = false;
+upsert settings;
+System.debug('✅ Automation Settings initialized - ALL OFF for migration');</div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint__title">✓ Phase 1 Checkpoint</div>
+        <ul class="checklist">
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">All metadata deployed</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Objects accessible in UI</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Automation Settings initialized (ALL OFF)</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Validation rule created (INACTIVE)</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Record time: __________</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 2: Flow Deactivation -->
+  <section class="section runbook-section" id="phase2" style="background: var(--color-bg-secondary);">
+    <div class="container">
+      <h2 class="mb-8">Phase 2: Flow Deactivation</h2>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">2.1</div>
+          <div>
+            <div class="phase-card__title">Deactivate RAR Flows (Just Deployed)</div>
+            <div class="phase-card__description">The 4 flows deployed with the RAR package should be deactivated for bulk operations</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="sf-nav-group">
+            <a href="#" class="sf-link sf-link--disabled" data-sf-path="/lightning/setup/Flows/home" target="_blank">
+              <span class="sf-link__icon">↗</span> Open Flows
+            </a>
+          </div>
+          <div class="table-wrapper mt-4">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Flow Name</th><th>Safe to Deactivate</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>Account_Logo_Location_Update</td><td>✅ Yes (deployed with RAR)</td></tr>
+                <tr><td>2</td><td>Add_Physical_Location_to_NS_Subscriptions</td><td>✅ Yes (deployed with RAR)</td></tr>
+                <tr><td>3</td><td>Add_Physical_Location_to_venue</td><td>✅ Yes (deployed with RAR)</td></tr>
+                <tr><td>4</td><td>Update_Physical_Location_Count_of_Netsuite_Billing_Accounts</td><td>✅ Yes (deployed with RAR)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="checklist mt-4">
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Logo_Location_Update - DEACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Add_Physical_Location_to_NS_Subscriptions - DEACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Add_Physical_Location_to_venue - DEACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Update_Physical_Location_Count - DEACTIVATED at __________</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">2.2</div>
+          <div>
+            <div class="phase-card__title">Deactivate Existing Account Flows</div>
+            <div class="phase-card__description">These existing org flows cause CPU timeouts during bulk operations</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="critical-box">
+            <div class="critical-box__title">CRITICAL</div>
+            <p>Deactivate before any bulk data operations. CPU timeout at batch sizes > 100.</p>
+          </div>
+          <div class="table-wrapper mt-4">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Flow Name</th><th>Safe to Deactivate</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>Account_Segment_Logic</td><td>✅ Yes</td></tr>
+                <tr><td>2</td><td>Account_Logo_Creation</td><td>✅ Yes</td></tr>
+                <tr><td>3</td><td>Account_Logo_Location_Update</td><td>✅ Yes</td></tr>
+                <tr><td>4</td><td>Account_Logo_Website_Change</td><td>✅ Yes</td></tr>
+                <tr><td>5</td><td>Account_Duplicate_Stamp</td><td>✅ Yes</td></tr>
+                <tr><td>6</td><td>Account_Set_Business_Type_From_Group</td><td>✅ Yes</td></tr>
+                <tr><td>7</td><td>Account_Stamp_Customer_Health_Prior_Value</td><td>✅ Yes</td></tr>
+                <tr><td>8</td><td>Account_Sticky_Account_Name_Owner</td><td>✅ Yes</td></tr>
+                <tr><td>9</td><td>Account_Update_Logo_Owner</td><td>✅ Yes</td></tr>
+                <tr><td>10</td><td>Account_Wipe_Ultimate_Parent_For_Parent_Change</td><td>✅ Yes</td></tr>
+                <tr><td>11</td><td>Propagate_Account_Owner_v3</td><td>✅ Yes</td></tr>
+                <tr><td>12</td><td>Propagate_Account_Team_v6</td><td>✅ Yes</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box mt-4">
+            <p><strong>Keep Active:</strong></p>
+            <ul style="margin: var(--space-2) 0 0 var(--space-5);">
+              <li>Account_New - Only fires on INSERT, minimal overhead</li>
+              <li>Account_Sync_Account_On_NSC - Required for NetSuite sync</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint__title">✓ Phase 2 Checkpoint</div>
+        <ul class="checklist">
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">4 RAR flows deactivated</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">12 existing Account flows deactivated</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Documented which were deactivated</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Record time: __________</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 3: Data Backfill -->
+  <section class="section runbook-section" id="phase3">
+    <div class="container">
+      <h2 class="mb-8">Phase 3: Data Backfill</h2>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">3</div>
+          <div>
+            <div class="phase-card__title">Backfill Website_Root__c on Accounts</div>
+            <div class="phase-card__description">Must be populated before domain creation and merging can work</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="sub-section">
+            <div class="sub-section__title">Step 1: Count accounts needing backfill</div>
+            <div class="command-block">SELECT COUNT(Id)
+FROM Account
+WHERE Website != null
+  AND Website_Root__c = null</div>
+            <p class="text-muted"><strong>Expected:</strong> ~6,800+ accounts (based on Partial Copy)</p>
+          </div>
+
+          <div class="sub-section">
+            <div class="sub-section__title">Step 2: Run backfill batch</div>
+            <div class="command-block"><span class="command-block__comment">// Execute in Developer Console:</span>
+Database.executeBatch(new AccountWebsiteRootBackfillBatch(200), 200);</div>
+            <div class="sf-nav-group">
+              <a href="#" class="sf-link sf-link--disabled" data-sf-path="/lightning/setup/AsyncApexJobs/home" target="_blank">
+                <span class="sf-link__icon">↗</span> Monitor Apex Jobs
+              </a>
+            </div>
+          </div>
+
+          <div class="sub-section">
+            <div class="sub-section__title">Step 3: Verify backfill</div>
+            <div class="command-block"><span class="command-block__comment">-- Should return 0 (all accounts with websites now have Website_Root__c)</span>
+SELECT COUNT(Id)
+FROM Account
+WHERE Website != null
+  AND Website_Root__c = null</div>
+          </div>
+
+          <div class="info-box">
+            <p><strong>Common Invalid Patterns (expected to fail):</strong></p>
+            <ul style="margin: var(--space-2) 0 0 var(--space-5);">
+              <li><code>user@email.com</code> (email as website)</li>
+              <li><code>n/a</code>, <code>none</code>, <code>blank</code> (placeholders)</li>
+              <li><code>facebook.com/businessname</code> (social media)</li>
+            </ul>
+            <p class="mt-2">Document count of invalid records and move on - these are data quality issues to clean up separately.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint__title">✓ Phase 3 Checkpoint</div>
+        <ul class="checklist">
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Website_Root__c backfill complete</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Accounts with Website: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Accounts with Website_Root__c: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Invalid/skipped accounts: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Record time: __________</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 4: Physical Location Import -->
+  <section class="section runbook-section" id="phase4" style="background: var(--color-bg-secondary);">
+    <div class="container">
+      <h2 class="mb-8">Phase 4: Physical Location Import</h2>
+
+      <div class="critical-box">
+        <div class="critical-box__title">WHY PHYSICAL LOCATIONS MUST COME BEFORE MERGING</div>
+        <p>Physical Locations use a Master-Detail relationship to Account. When accounts merge:</p>
+        <ul style="margin: var(--space-2) 0 0 var(--space-5);">
+          <li>Child accounts are deleted</li>
+          <li>Related records (including Physical Locations) reparent to the master account</li>
+        </ul>
+        <p class="mt-2"><strong>If Physical Locations don't exist before merging:</strong> Locations would be created on accounts that will be merged away → orphaned or duplicated.</p>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">4</div>
+          <div>
+            <div class="phase-card__title">Import Physical Locations</div>
+            <div class="phase-card__description">Source: NetSuite_Billing_Account__c.Location_Address__c</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="sub-section">
+            <div class="sub-section__title">Data Loader Settings</div>
+            <ul style="margin: 0; padding-left: var(--space-5);">
+              <li>Object: Physical_Location__c</li>
+              <li>Operation: Insert</li>
+              <li>Batch Size: <strong>200</strong></li>
+              <li><strong>IMPORTANT:</strong> Do NOT map <code>Name</code> field (auto-number)</li>
+            </ul>
+          </div>
+
+          <div class="sub-section">
+            <div class="sub-section__title">Field Mapping</div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>CSV Column</th><th>Salesforce Field</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Account__c</td><td>Account__c (Required - Master-Detail)</td></tr>
+                  <tr><td>Address__Street__s</td><td>Address__Street__s</td></tr>
+                  <tr><td>Address__City__s</td><td>Address__City__s</td></tr>
+                  <tr><td>Address__StateCode__s</td><td>Address__StateCode__s</td></tr>
+                  <tr><td>Address__PostalCode__s</td><td>Address__PostalCode__s</td></tr>
+                  <tr><td>Address__CountryCode__s</td><td>Address__CountryCode__s</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="sub-section">
+            <div class="sub-section__title">Common Import Errors</div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>INVALID_CROSS_REFERENCE_KEY</code></td><td>Account ID doesn't exist</td><td>Remove row or fix Account ID</td></tr>
+                  <tr><td><code>FIELD_INTEGRITY_EXCEPTION</code></td><td>Invalid StateCode</td><td>Check 2-letter ISO code</td></tr>
+                  <tr><td><code>INVALID_FIELD_FOR_INSERT_UPDATE</code></td><td>Trying to set Name</td><td>Remove Name from mapping</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="sub-section">
+            <div class="sub-section__title">Verify Import</div>
+            <div class="command-block"><span class="command-block__comment">-- Count Physical Locations</span>
+SELECT COUNT(Id) FROM Physical_Location__c
+
+<span class="command-block__comment">-- Verify Account links</span>
+SELECT COUNT(Id) FROM Physical_Location__c WHERE Account__c != null
+
+<span class="command-block__comment">-- Sample check</span>
+SELECT Id, Name, Account__r.Name, Address__City__s, Address__StateCode__s
+FROM Physical_Location__c
+LIMIT 20</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint__title">✓ Phase 4 Checkpoint</div>
+        <ul class="checklist">
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">CSV prepared and validated</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Line endings converted to LF</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Physical Locations imported</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Records imported: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Records with errors: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Record time: __________</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 5: Franchisor Migration -->
+  <section class="section runbook-section" id="phase5">
+    <div class="container">
+      <h2 class="mb-8">Phase 5: Franchisor Account Migration</h2>
+
+      <div class="info-box">
+        <p>Franchisor accounts represent operating companies (like "Hamra Enterprises") that own/operate franchise locations. These must be identified, created, and migrated BEFORE linking to Physical Locations.</p>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">5</div>
+          <div>
+            <div class="phase-card__title">Four-Step Franchisor Process</div>
+            <div class="phase-card__description">Score, migrate, create G-codes, create non-G-codes</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="sub-section">
+            <div class="sub-section__title">Step 1: Export and Score Franchise Candidates</div>
+            <div class="command-block">SELECT Id, Name, Business_Type__c, Website, Brand__c, ParentId, RecordType.Name
+FROM Account
+WHERE Business_Type__c IN ('Franchisee', 'Franchisee (Multi-Brand)', 'Holding Company')</div>
+            <p class="text-muted">Run scoring model: <code>python3 franchise_scoring.py</code></p>
+            <div class="table-wrapper mt-2">
+              <table>
+                <thead>
+                  <tr><th>Classification</th><th>Count</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>OPERATOR (score >= 3)</td><td>~607</td><td>Migrate to Franchisor RT</td></tr>
+                  <tr><td>LOCATION (score <= -2)</td><td>~1,532</td><td>Do not migrate</td></tr>
+                  <tr><td>REVIEW (score -1 to +2)</td><td>~604</td><td>Manual review</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="sub-section">
+            <div class="sub-section__title">Step 2: Migrate High-Confidence Operators</div>
+            <div class="command-block"><span class="command-block__comment">// MigrateFranchisorOperators.apex</span>
+Id franchisorRtId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName()
+    .get('Franchisor').getRecordTypeId();
+
+Set&lt;Id&gt; operatorIds = new Set&lt;Id&gt;{
+    // PASTE IDs FROM CSV HERE (score >= 3)
+};
+
+List&lt;Account&gt; accountsToMigrate = [
+    SELECT Id, Name, Business_Type__c, RecordTypeId
+    FROM Account
+    WHERE Id IN :operatorIds
+      AND RecordType.DeveloperName != 'Franchisor'
+];
+
+for (Account acc : accountsToMigrate) {
+    acc.RecordTypeId = franchisorRtId;
+}
+
+update accountsToMigrate;
+System.debug('✅ Migrated ' + accountsToMigrate.size() + ' accounts to Franchisor RT');</div>
+          </div>
+
+          <div class="sub-section">
+            <div class="sub-section__title">Step 3: Create G-Code Franchisor Accounts</div>
+            <p>Planet Fitness uses G-codes (e.g., "G0026-BLACKDUCKPARTNERS") in <code>Venue.franchisee_name__c</code></p>
+            <div class="command-block"><span class="command-block__comment">-- Discover G-Codes</span>
+SELECT franchisee_name__c, COUNT(Id) cnt
+FROM Venue__c
+WHERE franchisee_name__c LIKE 'G0%'
+GROUP BY franchisee_name__c
+ORDER BY COUNT(Id) DESC</div>
+            <p class="text-muted"><strong>Expected:</strong> ~38 new Franchisor accounts created</p>
+          </div>
+
+          <div class="sub-section">
+            <div class="sub-section__title">Step 4: Create Non-G-Code Franchisor Accounts</div>
+            <p>Some franchisee names are plain text (e.g., "High Tide Hospitality")</p>
+            <div class="command-block"><span class="command-block__comment">-- Discover Non-G-Code Names</span>
+SELECT franchisee_name__c, COUNT(Id) cnt
+FROM Venue__c
+WHERE franchisee_name__c NOT LIKE 'G0%'
+  AND franchisee_name__c != null
+GROUP BY franchisee_name__c
+ORDER BY COUNT(Id) DESC</div>
+          </div>
+
+          <div class="sub-section">
+            <div class="sub-section__title">Verify Franchisor Migration</div>
+            <div class="command-block"><span class="command-block__comment">-- Count Franchisor accounts</span>
+SELECT COUNT(Id) FROM Account WHERE RecordType.DeveloperName = 'Franchisor'
+
+<span class="command-block__comment">-- Breakdown by Business_Type__c</span>
+SELECT Business_Type__c, COUNT(Id) cnt
+FROM Account
+WHERE RecordType.DeveloperName = 'Franchisor'
+GROUP BY Business_Type__c</div>
+            <p class="text-muted"><strong>Expected Total:</strong> ~750+ Franchisor accounts (600+ migrated + 38 G-code + 92 non-G-code + 20 RT conversions)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint__title">✓ Phase 5 Checkpoint</div>
+        <ul class="checklist">
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Scoring model run</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">High-confidence operators migrated: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">G-code Franchisors created: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Non-G-code Franchisors created: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Total Franchisor accounts: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Record time: __________</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 6: Domain Creation & Account Merging -->
+  <section class="section runbook-section" id="phase6" style="background: var(--color-bg-secondary);">
+    <div class="container">
+      <h2 class="mb-8">Phase 6: Domain Creation & Account Merging</h2>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">6.1</div>
+          <div>
+            <div class="phase-card__title">Create Domain__c Records</div>
+            <div class="phase-card__description">Creates domains for all accounts with Website_Root__c</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="command-block"><span class="command-block__comment">// Create domains for accounts with Website_Root__c</span>
+Database.executeBatch(new AccountDomainCreateBatch(), 100);</div>
+          <p class="text-muted"><strong>Monitor:</strong> Setup → Apex Jobs</p>
+          <p class="text-muted"><strong>Expected:</strong> ~24,000+ Domain__c records created</p>
+
+          <div class="sub-section mt-4">
+            <div class="sub-section__title">Verify Domain Creation</div>
+            <div class="command-block"><span class="command-block__comment">-- Count domains</span>
+SELECT COUNT(Id) FROM Domain__c
+
+<span class="command-block__comment">-- Check ownership</span>
+SELECT COUNT(Id) FROM Domain__c WHERE Account__c != null
+
+<span class="command-block__comment">-- Check for duplicates</span>
+SELECT Clean_Domain__c, COUNT(Id) cnt
+FROM Domain__c
+GROUP BY Clean_Domain__c
+HAVING COUNT(Id) > 1</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">6.2</div>
+          <div>
+            <div class="phase-card__title">Preview Account Merges</div>
+            <div class="phase-card__description">ALWAYS preview before executing merges</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="command-block"><span class="command-block__comment">// Preview merges (no changes made)</span>
+AccountMergeService.previewMerges();</div>
+          <p><strong>Review the output:</strong></p>
+          <ul style="margin: var(--space-2) 0 0 var(--space-5);">
+            <li>Source accounts (to be merged)</li>
+            <li>Target accounts (masters)</li>
+            <li>Contacts/Opps to reparent</li>
+            <li>Physical Locations to reparent</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">6.3</div>
+          <div>
+            <div class="phase-card__title">Execute Account Merges</div>
+            <div class="phase-card__description">Run the merge batch job</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="command-block"><span class="command-block__comment">// Execute the merge batch</span>
+AccountMergeService.executeMerges();</div>
+          <p class="text-muted"><strong>Monitor:</strong> Setup → Apex Jobs</p>
+
+          <div class="warning-box mt-4">
+            <p><strong>Common Merge Errors:</strong></p>
+            <div class="table-wrapper mt-2">
+              <table>
+                <thead>
+                  <tr><th>Error</th><th>Cause</th><th>Solution</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>FIELD_INTEGRITY_EXCEPTION</code></td><td>Closed Opps can't change Account</td><td>Logged and skipped (OK)</td></tr>
+                  <tr><td><code>ENTITY_IS_DELETED</code></td><td>Source already merged</td><td>Expected for chains</td></tr>
+                  <tr><td>Social media domains</td><td>facebook.com, instagram.com</td><td>Should be excluded by filter</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="sub-section mt-4">
+            <div class="sub-section__title">Verify Merges</div>
+            <div class="command-block"><span class="command-block__comment">-- Count merged accounts</span>
+SELECT COUNT(Id) FROM Account WHERE Merge_Status__c = 'Merged'
+
+<span class="command-block__comment">-- Verify Physical Locations still intact</span>
+SELECT COUNT(Id) FROM Physical_Location__c
+
+<span class="command-block__comment">-- Check contacts reparented (should be 0)</span>
+SELECT COUNT(Id) FROM Contact WHERE Account.Merge_Status__c = 'Merged'</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint__title">✓ Phase 6 Checkpoint</div>
+        <ul class="checklist">
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Domains created: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Merge preview reviewed</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Merges executed: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Accounts merged: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Physical Locations maintained: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Record time: __________</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 7: Franchisor Linking -->
+  <section class="section runbook-section" id="phase7">
+    <div class="container">
+      <h2 class="mb-8">Phase 7: Franchisor Linking</h2>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">7</div>
+          <div>
+            <div class="phase-card__title">Populate Physical_Location.Franchisor__c</div>
+            <div class="phase-card__description">Link Physical Locations to Franchisor accounts</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <p>Now that Franchisor accounts exist and Physical Locations are in place, we link them via <code>Physical_Location__c.Franchisor__c</code>.</p>
+
+          <div class="sub-section">
+            <div class="sub-section__title">Verify Franchisor Linking</div>
+            <div class="command-block"><span class="command-block__comment">-- Count linked locations</span>
+SELECT COUNT(Id) FROM Physical_Location__c WHERE Franchisor__c != null
+
+<span class="command-block__comment">-- Breakdown by Franchisor</span>
+SELECT Franchisor__r.Name, COUNT(Id) cnt
+FROM Physical_Location__c
+WHERE Franchisor__c != null
+GROUP BY Franchisor__r.Name
+ORDER BY COUNT(Id) DESC
+LIMIT 20</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint__title">✓ Phase 7 Checkpoint</div>
+        <ul class="checklist">
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Auto-assignable accounts processed</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Locations linked to Franchisors: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Multi-operator accounts identified: __________</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Record time: __________</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 8: Validation -->
+  <section class="section runbook-section" id="phase8" style="background: var(--color-bg-secondary);">
+    <div class="container">
+      <h2 class="mb-8">Phase 8: Post-Migration Validation</h2>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">8</div>
+          <div>
+            <div class="phase-card__title">Data Integrity Checks</div>
+            <div class="phase-card__description">Verify all data relationships and counts</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="command-block"><span class="command-block__comment">-- 1. Physical Locations have Account (Master-Detail)</span>
+SELECT COUNT(Id) FROM Physical_Location__c WHERE Account__c = null
+<span class="command-block__comment">-- Expected: 0</span>
+
+<span class="command-block__comment">-- 2. No orphan domains</span>
+SELECT COUNT(Id) FROM Domain__c WHERE Account__c = null
+<span class="command-block__comment">-- Expected: 0 (or very few pending rematch)</span>
+
+<span class="command-block__comment">-- 3. No duplicate domains</span>
+SELECT Clean_Domain__c, COUNT(Id) cnt
+FROM Domain__c
+GROUP BY Clean_Domain__c
+HAVING COUNT(Id) > 1
+<span class="command-block__comment">-- Expected: 0</span>
+
+<span class="command-block__comment">-- 4. Merged accounts don't own domains</span>
+SELECT d.Clean_Domain__c, a.Name, a.Merge_Status__c
+FROM Domain__c d
+JOIN Account a ON d.Account__c = a.Id
+WHERE a.Merge_Status__c = 'Merged'
+<span class="command-block__comment">-- Expected: 0</span></div>
+
+          <div class="sub-section mt-4">
+            <div class="sub-section__title">Trigger Validation</div>
+            <div class="command-block"><span class="command-block__comment">// Test Account trigger - should populate Website_Root__c</span>
+Account testAcc = new Account(Name = 'Test Trigger Account', Website = 'https://www.testtrigger.com/page');
+insert testAcc;
+testAcc = [SELECT Website_Root__c FROM Account WHERE Id = :testAcc.Id];
+System.assertEquals('testtrigger.com', testAcc.Website_Root__c);
+delete testAcc;
+System.debug('✅ Account trigger working');
+
+<span class="command-block__comment">// Test Domain trigger - should populate Clean_Domain__c</span>
+Domain__c testDom = new Domain__c(Domain_URL__c = 'https://WWW.TESTDOMAIN.COM/page');
+insert testDom;
+testDom = [SELECT Clean_Domain__c FROM Domain__c WHERE Id = :testDom.Id];
+System.assertEquals('testdomain.com', testDom.Clean_Domain__c);
+delete testDom;
+System.debug('✅ Domain trigger working');</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint__title">✓ Phase 8 Checkpoint</div>
+        <ul class="checklist">
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">All data integrity checks pass</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Counts match expectations</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Triggers fire correctly</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Record time: __________</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 9: Schedule Batch Jobs -->
+  <section class="section runbook-section" id="phase9">
+    <div class="container">
+      <h2 class="mb-8">Phase 9: Schedule Batch Jobs</h2>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">9</div>
+          <div>
+            <div class="phase-card__title">Schedule Maintenance Jobs</div>
+            <div class="phase-card__description">Enable ongoing data quality automation</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="command-block"><span class="command-block__comment">// Schedule all maintenance jobs</span>
+Map&lt;String, Id&gt; jobIds = DomainMaintenanceScheduler.scheduleAllMaintenanceJobs();
+for (String jobName : jobIds.keySet()) {
+    System.debug('Scheduled: ' + jobName + ' - ' + jobIds.get(jobName));
+}
+
+<span class="command-block__comment">// Or schedule individually:</span>
+
+<span class="command-block__comment">// Daily Domain Validation - 2 AM</span>
+System.schedule('Domain Validation Daily', '0 0 2 * * ?',
+    new DomainMaintenanceScheduler('validation'));
+
+<span class="command-block__comment">// Weekly Domain Rematch - Sunday 3 AM</span>
+System.schedule('Domain Rematch Weekly', '0 0 3 ? * SUN',
+    new DomainMaintenanceScheduler('rematch'));
+
+<span class="command-block__comment">// Weekly Duplicate Detection - Sunday 4 AM</span>
+System.schedule('Domain Duplicate Detection', '0 0 4 ? * SUN',
+    new DomainMaintenanceScheduler('duplicate'));</div>
+
+          <div class="sf-nav-group mt-4">
+            <a href="#" class="sf-link sf-link--disabled" data-sf-path="/lightning/setup/ScheduledJobs/home" target="_blank">
+              <span class="sf-link__icon">↗</span> Verify Scheduled Jobs
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint__title">✓ Phase 9 Checkpoint</div>
+        <ul class="checklist">
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Domain Validation Daily scheduled</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Domain Rematch Weekly scheduled</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Domain Duplicate Detection scheduled</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Record time: __________</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase 10: Go-Live -->
+  <section class="section runbook-section" id="phase10" style="background: var(--color-bg-secondary);">
+    <div class="container">
+      <h2 class="mb-8">Phase 10: Re-activate Flows & Go-Live</h2>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">10.1</div>
+          <div>
+            <div class="phase-card__title">Enable Automation Settings</div>
+            <div class="phase-card__description">Now that all data migration is complete</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="command-block"><span class="command-block__comment">// Enable all automations after data migration is complete</span>
+Automation_Settings__c settings = Automation_Settings__c.getOrgDefaults();
+settings.All_Automations_Enabled__c = true;
+settings.Triggers_Enabled__c = true;
+settings.Batch_Jobs_Enabled__c = true;
+settings.Scheduled_Jobs_Enabled__c = true;
+settings.Queueable_Jobs_Enabled__c = true;
+settings.Account_Trigger_Enabled__c = true;
+settings.Domain_Trigger_Enabled__c = true;
+settings.Account_Delete_Protection_Enabled__c = true;
+settings.Domain_Validation_Batch_Enabled__c = true;
+settings.Billing_Account_Location_Link_Enabled__c = true;
+update settings;
+System.debug('✅ All automations ENABLED');</div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">10.2</div>
+          <div>
+            <div class="phase-card__title">Activate Validation Rule</div>
+            <div class="phase-card__description">Activate the validation rule created in Phase 1</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="sf-nav-group">
+            <a href="#" class="sf-link sf-link--disabled" data-sf-path="/lightning/setup/ObjectManager/Account/ValidationRules/view" target="_blank">
+              <span class="sf-link__icon">↗</span> Open Account Validation Rules
+            </a>
+          </div>
+          <ul class="checklist mt-4">
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Prevent_Cross_RecordType_Merge - ACTIVATED at __________</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">10.3</div>
+          <div>
+            <div class="phase-card__title">Re-enable Account Duplicate Rules</div>
+            <div class="phase-card__description">Re-enable the duplicate rules disabled in Phase 1</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="sf-nav-group">
+            <a href="#" class="sf-link sf-link--disabled" data-sf-path="/lightning/setup/DuplicateRules/home" target="_blank">
+              <span class="sf-link__icon">↗</span> Open Duplicate Rules
+            </a>
+          </div>
+          <ul class="checklist mt-4">
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Match_Rule - REACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">[Any other Account duplicate rules] - REACTIVATED at __________</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">10.4</div>
+          <div>
+            <div class="phase-card__title">Re-activate Flows</div>
+            <div class="phase-card__description">Reactivate all flows deactivated in Phase 2</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="sf-nav-group">
+            <a href="#" class="sf-link sf-link--disabled" data-sf-path="/lightning/setup/Flows/home" target="_blank">
+              <span class="sf-link__icon">↗</span> Open Flows
+            </a>
+          </div>
+          <h5 class="mt-4">RAR Flows (Deployed with this package)</h5>
+          <ul class="checklist mt-2">
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Logo_Location_Update - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Add_Physical_Location_to_NS_Subscriptions - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Add_Physical_Location_to_venue - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Update_Physical_Location_Count - ACTIVATED at __________</span></li>
+          </ul>
+
+          <h5 class="mt-4">Existing Account Flows (Reactivate in order)</h5>
+          <ul class="checklist mt-2">
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Propagate_Account_Team_v6 - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Propagate_Account_Owner_v3 - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Segment_Logic - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Set_Business_Type_From_Group - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Logo_Creation - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Logo_Website_Change - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Duplicate_Stamp - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Stamp_Customer_Health_Prior_Value - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Sticky_Account_Name_Owner - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Update_Logo_Owner - ACTIVATED at __________</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Account_Wipe_Ultimate_Parent_For_Parent_Change - ACTIVATED at __________</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">10.5</div>
+          <div>
+            <div class="phase-card__title">Final Smoke Test</div>
+            <div class="phase-card__description">Verify all automations work end-to-end</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <ul class="checklist">
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Create new Account with Website → Verify Website_Root__c populated</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Create new Domain__c → Verify Clean_Domain__c populated</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Create new Physical_Location__c → Verify Master-Detail works</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Update Account Website → Verify Domain__c created/updated</span></li>
+            <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Run small merge batch → Verify completion</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card__header">
+          <div class="phase-card__number">10.6</div>
+          <div>
+            <div class="phase-card__title">Stakeholder Sign-Off</div>
+            <div class="phase-card__description">Get approval from key stakeholders</div>
+          </div>
+        </div>
+        <div class="phase-card__content">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>Stakeholder</th><th>Role</th><th>Date</th><th>Signature</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Kevin Grothe</td><td>Operations</td><td>_____________</td><td>_____________</td></tr>
+                <tr><td>Nick Bolton</td><td>Architecture</td><td>_____________</td><td>_____________</td></tr>
+                <tr><td>Aron Kuehnemann</td><td>ARR Reporting</td><td>_____________</td><td>_____________</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkpoint" style="background: linear-gradient(135deg, var(--color-success-bg) 0%, var(--color-info-bg) 100%); border-color: var(--color-success);">
+        <div class="checkpoint__title" style="color: var(--color-success);">✓ GO-LIVE COMPLETE</div>
+        <ul class="checklist">
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">All phases completed</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">All validations pass</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Flows reactivated</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">Stakeholder approval obtained</span></li>
+          <li class="checklist__item"><div class="checklist__checkbox"></div><span class="checklist__text">DEPLOYMENT COMPLETE at __________</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rollback -->
+  <section class="section runbook-section" id="rollback">
+    <div class="container container--narrow">
+      <h2 class="mb-8">Rollback Procedures</h2>
+
+      <div class="rollback-warning">
+        <div class="rollback-warning__title">EMERGENCY KILL SWITCH</div>
+        <div class="command-block" style="background: #2d1f1f;"><span class="command-block__comment">// Disable ALL custom automations immediately</span>
+Automation_Settings__c settings = Automation_Settings__c.getOrgDefaults();
+settings.All_Automations_Enabled__c = false;
+update settings;</div>
+      </div>
+
+      <div class="card mb-6">
+        <h4 class="mb-4">Deactivate Specific Components</h4>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Component</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Flows</td><td>Setup → Flows → Deactivate</td></tr>
+              <tr><td>Triggers</td><td>Deploy inactive versions OR disable via Automation Settings</td></tr>
+              <tr><td>Batch Jobs</td><td>Setup → Apex Jobs → Abort + disable in Automation Settings</td></tr>
+              <tr><td>Scheduled Jobs</td><td>Setup → Scheduled Jobs → Delete</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card mb-6">
+        <h4 class="mb-4">Data Rollback</h4>
+        <div class="command-block"><span class="command-block__comment">// WARNING: This deletes ALL Physical Locations</span>
+<span class="command-block__comment">// Automation_Settings__c.Account_Delete_Protection_Enabled__c must be FALSE</span>
+List&lt;Physical_Location__c&gt; locs = [SELECT Id FROM Physical_Location__c LIMIT 10000];
+delete locs;
+<span class="command-block__comment">// Repeat until all deleted</span>
+
+<span class="command-block__comment">// Delete Domains (if needed)</span>
+List&lt;Domain__c&gt; doms = [SELECT Id FROM Domain__c LIMIT 10000];
+delete doms;</div>
+        <div class="warning-box mt-4">
+          <p><strong>Restore Merged Accounts:</strong> Cannot be automatically unmerged. Would need to restore from backup exports.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 class="mb-4">Emergency Contacts</h4>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Role</th><th>Contact</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Drew Lambert</td><td>Consultant</td><td>drew@revelateops.com</td></tr>
+              <tr><td>Kevin Grothe</td><td>RevOps Lead</td><td>kevin@rockbot.com</td></tr>
+              <tr><td>Nick Bolton</td><td>SVP Operations</td><td>nick@rockbot.com</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Progress Bar (Sticky) -->
+  <div id="progress-bar" class="progress-bar">
+    <div class="progress-bar__inner">
+      <div class="progress-bar__label">
+        <span id="progress-text">0 / 0 tasks</span>
+        <span id="progress-percent">0%</span>
+      </div>
+      <div class="progress-bar__track">
+        <div id="progress-fill" class="progress-bar__fill"></div>
+      </div>
+      <div class="progress-bar__actions">
+        <button id="reset-btn" class="progress-bar__reset" title="Reset all progress">↻ Reset</button>
+        <button id="export-btn" class="progress-bar__export" title="Export progress">📋 Export</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Progress Bar */
+    .progress-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-bg-card);
+      border-top: 2px solid var(--color-pulse);
+      padding: var(--space-3) var(--space-6);
+      z-index: 1000;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    }
+    .progress-bar__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .progress-bar__label {
+      display: flex;
+      gap: var(--space-4);
+      min-width: 180px;
+      font-size: var(--text-sm);
+      font-weight: 600;
+    }
+    #progress-percent {
+      color: var(--color-pulse);
+    }
+    .progress-bar__track {
+      flex: 1;
+      height: 8px;
+      background: var(--color-bg-secondary);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .progress-bar__fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-pulse), #6366f1);
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+    .progress-bar__actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+    .progress-bar__reset, .progress-bar__export {
+      padding: var(--space-1) var(--space-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-bg-secondary);
+      color: var(--color-text-secondary);
+      font-size: var(--text-xs);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .progress-bar__reset:hover {
+      border-color: var(--color-error);
+      color: var(--color-error);
+    }
+    .progress-bar__export:hover {
+      border-color: var(--color-pulse);
+      color: var(--color-pulse);
+    }
+
+    /* Interactive Checkboxes */
+    .checklist__checkbox {
+      cursor: pointer;
+      position: relative;
+      transition: all var(--transition-fast);
+    }
+    .checklist__checkbox:hover {
+      border-color: var(--color-pulse);
+      background: var(--color-info-bg);
+    }
+    .checklist__checkbox.checked {
+      background: var(--color-pulse);
+      border-color: var(--color-pulse);
+    }
+    .checklist__checkbox.checked::after {
+      content: "✓";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .checklist__item.completed .checklist__text {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    /* Editable Fields */
+    .editable-field {
+      background: var(--color-bg-secondary);
+      border: 1px dashed var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 2px 8px;
+      min-width: 100px;
+      display: inline-block;
+      cursor: text;
+      transition: all var(--transition-fast);
+    }
+    .editable-field:hover {
+      border-color: var(--color-pulse);
+      background: var(--color-info-bg);
+    }
+    .editable-field:focus {
+      outline: none;
+      border-color: var(--color-pulse);
+      border-style: solid;
+      background: white;
+    }
+    .editable-field.filled {
+      background: var(--color-success-bg);
+      border-color: var(--color-success);
+      border-style: solid;
+    }
+
+    /* Add padding to body for fixed progress bar */
+    body {
+      padding-bottom: 80px;
+    }
+  </style>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div>
+          <p class="footer__brand">
+            <span class="footer__brand-accent">Rockbot</span> Revenue Architecture Reset
+          </p>
+          <p class="footer__text">Full Copy Deployment Guide | Revelate Operations</p>
+        </div>
+        <div class="text-right">
+          <p class="footer__text">Prepared by Drew Lambert</p>
+          <p class="footer__text">December 29, 2025</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Interactive Progress Tracking Script -->
+  <script>
+    (function() {
+      const STORAGE_KEY = 'rockbot-deployment-runbook-progress';
+      const API_URL = '/api/status';
+      let state = { checkboxes: {}, fields: {} };
+      let sandboxUrl = '';
+      let saveTimeout = null;
+      let isInitialized = false;
+
+      // Initialize on DOM ready
+      document.addEventListener('DOMContentLoaded', init);
+
+      async function init() {
+        // Load state from API first, fallback to localStorage
+        await loadStateFromAPI();
+        setupSandboxUrl();
+        setupCheckboxes();
+        setupEditableFields();
+        setupButtons();
+        updateProgress();
+        isInitialized = true;
+        showSyncStatus('Synced with server');
+      }
+
+      async function loadStateFromAPI() {
+        try {
+          const response = await fetch(API_URL);
+          if (response.ok) {
+            const data = await response.json();
+            state = {
+              checkboxes: data.checkboxes || {},
+              fields: data.fields || {}
+            };
+            sandboxUrl = data.sandbox_url || '';
+            // Also update localStorage as backup
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            console.log('Loaded state from API');
+            return;
+          }
+        } catch (e) {
+          console.warn('API unavailable, using localStorage:', e);
+        }
+        // Fallback to localStorage
+        loadStateFromLocalStorage();
+      }
+
+      function loadStateFromLocalStorage() {
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          state = saved ? JSON.parse(saved) : { checkboxes: {}, fields: {} };
+        } catch (e) {
+          console.error('Failed to load state:', e);
+          state = { checkboxes: {}, fields: {} };
+        }
+      }
+
+      function saveState() {
+        // Save to localStorage immediately
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {
+          console.error('Failed to save to localStorage:', e);
+        }
+
+        // Debounce API save (500ms)
+        if (saveTimeout) clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(saveStateToAPI, 500);
+      }
+
+      async function saveStateToAPI() {
+        try {
+          const input = document.getElementById('sandbox-url');
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              checkboxes: state.checkboxes,
+              fields: state.fields,
+              sandbox_url: input?.value?.trim() || null
+            })
+          });
+          if (response.ok) {
+            showSyncStatus('Saved to server');
+            console.log('State saved to API');
+          } else {
+            showSyncStatus('Save failed', true);
+          }
+        } catch (e) {
+          console.error('Failed to save to API:', e);
+          showSyncStatus('Offline - saved locally', true);
+        }
+      }
+
+      function showSyncStatus(message, isError = false) {
+        let statusEl = document.getElementById('sync-status');
+        if (!statusEl) {
+          statusEl = document.createElement('div');
+          statusEl.id = 'sync-status';
+          statusEl.style.cssText = 'position: fixed; bottom: 20px; left: 20px; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 500; z-index: 1000; transition: opacity 0.3s;';
+          document.body.appendChild(statusEl);
+        }
+        statusEl.textContent = message;
+        statusEl.style.background = isError ? 'var(--color-warning-bg)' : 'var(--color-success-bg)';
+        statusEl.style.color = isError ? 'var(--color-warning)' : 'var(--color-success)';
+        statusEl.style.opacity = '1';
+        setTimeout(() => { statusEl.style.opacity = '0'; }, 2000);
+      }
+
+      function setupSandboxUrl() {
+        const input = document.getElementById('sandbox-url');
+        const saveBtn = document.getElementById('save-sandbox-url');
+        const status = document.getElementById('sandbox-url-status');
+
+        // Load saved URL (from API state or localStorage fallback)
+        if (sandboxUrl) {
+          input.value = sandboxUrl;
+          updateSalesforceLinks(sandboxUrl);
+        } else {
+          const localUrl = localStorage.getItem('rockbot-sandbox-url');
+          if (localUrl) {
+            input.value = localUrl;
+            updateSalesforceLinks(localUrl);
+          }
+        }
+
+        // Save button handler
+        saveBtn?.addEventListener('click', function() {
+          let url = input.value.trim();
+          url = url.replace(/\/+$/, '');
+
+          if (url) {
+            localStorage.setItem('rockbot-sandbox-url', url);
+            updateSalesforceLinks(url);
+            status.textContent = '✓ Saved';
+            status.style.color = 'var(--color-success)';
+            setTimeout(() => status.textContent = '', 2000);
+          } else {
+            localStorage.removeItem('rockbot-sandbox-url');
+            updateSalesforceLinks('');
+            status.textContent = 'Cleared';
+            status.style.color = 'var(--color-text-muted)';
+            setTimeout(() => status.textContent = '', 2000);
+          }
+          // Save to API
+          saveState();
+        });
+
+        // Enter key handler
+        input?.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            saveBtn.click();
+          }
+        });
+      }
+
+      function updateSalesforceLinks(baseUrl) {
+        const links = document.querySelectorAll('.sf-link[data-sf-path]');
+        links.forEach(link => {
+          const path = link.dataset.sfPath;
+          if (baseUrl) {
+            link.href = baseUrl + path;
+            link.classList.remove('sf-link--disabled');
+            link.onclick = null;
+          } else {
+            link.href = '#';
+            link.classList.add('sf-link--disabled');
+            link.onclick = (e) => {
+              e.preventDefault();
+              alert('Please enter your Salesforce Sandbox URL at the top of the page to enable this link.');
+            };
+          }
+        });
+      }
+
+      function setupCheckboxes() {
+        const checkboxes = document.querySelectorAll('.checklist__checkbox');
+        checkboxes.forEach((checkbox, index) => {
+          const id = `cb-${index}`;
+          checkbox.dataset.id = id;
+
+          // Restore state
+          if (state.checkboxes[id]) {
+            checkbox.classList.add('checked');
+            checkbox.closest('.checklist__item')?.classList.add('completed');
+          }
+
+          // Click handler
+          checkbox.addEventListener('click', function() {
+            const isChecked = this.classList.toggle('checked');
+            this.closest('.checklist__item')?.classList.toggle('completed', isChecked);
+            state.checkboxes[id] = isChecked;
+            saveState();
+            updateProgress();
+          });
+        });
+      }
+
+      function setupEditableFields() {
+        // Find all __________ placeholders and make them editable
+        const walker = document.createTreeWalker(
+          document.body,
+          NodeFilter.SHOW_TEXT,
+          null,
+          false
+        );
+
+        const textNodes = [];
+        let node;
+        while (node = walker.nextNode()) {
+          if (node.textContent.includes('__________')) {
+            textNodes.push(node);
+          }
+        }
+
+        textNodes.forEach((textNode, index) => {
+          const id = `field-${index}`;
+          const parent = textNode.parentNode;
+          const text = textNode.textContent;
+          const parts = text.split('__________');
+
+          const fragment = document.createDocumentFragment();
+          parts.forEach((part, i) => {
+            if (part) {
+              fragment.appendChild(document.createTextNode(part));
+            }
+            if (i < parts.length - 1) {
+              const span = document.createElement('span');
+              span.className = 'editable-field';
+              span.contentEditable = 'true';
+              span.dataset.id = id + '-' + i;
+              span.dataset.placeholder = '(click to enter)';
+
+              // Restore saved value
+              const savedValue = state.fields[span.dataset.id];
+              if (savedValue) {
+                span.textContent = savedValue;
+                span.classList.add('filled');
+              } else {
+                span.textContent = '(click to enter)';
+              }
+
+              // Focus handler
+              span.addEventListener('focus', function() {
+                if (this.textContent === '(click to enter)') {
+                  this.textContent = '';
+                }
+              });
+
+              // Blur handler
+              span.addEventListener('blur', function() {
+                const value = this.textContent.trim();
+                if (value && value !== '(click to enter)') {
+                  state.fields[this.dataset.id] = value;
+                  this.classList.add('filled');
+                } else {
+                  this.textContent = '(click to enter)';
+                  delete state.fields[this.dataset.id];
+                  this.classList.remove('filled');
+                }
+                saveState();
+              });
+
+              // Prevent Enter key
+              span.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  this.blur();
+                }
+              });
+
+              fragment.appendChild(span);
+            }
+          });
+
+          parent.replaceChild(fragment, textNode);
+        });
+      }
+
+      function setupButtons() {
+        // Reset button
+        document.getElementById('reset-btn')?.addEventListener('click', function() {
+          if (confirm('Reset all progress? This cannot be undone.')) {
+            state = { checkboxes: {}, fields: {} };
+            saveState();
+            location.reload();
+          }
+        });
+
+        // Export button
+        document.getElementById('export-btn')?.addEventListener('click', function() {
+          const exportData = generateExport();
+
+          // Copy to clipboard
+          navigator.clipboard.writeText(exportData).then(() => {
+            const btn = this;
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Copied!';
+            setTimeout(() => btn.textContent = originalText, 2000);
+          }).catch(() => {
+            // Fallback: download as file
+            const blob = new Blob([exportData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `deployment-progress-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+          });
+        });
+      }
+
+      function updateProgress() {
+        const checkboxes = document.querySelectorAll('.checklist__checkbox');
+        const total = checkboxes.length;
+        const checked = document.querySelectorAll('.checklist__checkbox.checked').length;
+        const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
+
+        document.getElementById('progress-text').textContent = `${checked} / ${total} tasks`;
+        document.getElementById('progress-percent').textContent = `${percent}%`;
+        document.getElementById('progress-fill').style.width = `${percent}%`;
+      }
+
+      function generateExport() {
+        const lines = [
+          '='.repeat(60),
+          'ROCKBOT DEPLOYMENT RUNBOOK - PROGRESS EXPORT',
+          `Generated: ${new Date().toLocaleString()}`,
+          '='.repeat(60),
+          ''
+        ];
+
+        // Get all checklist items with their text
+        const items = document.querySelectorAll('.checklist__item');
+        let currentSection = '';
+
+        items.forEach(item => {
+          // Find section header
+          const section = item.closest('.phase-card');
+          const sectionTitle = section?.querySelector('.phase-card__title')?.textContent || 'Unknown Section';
+
+          if (sectionTitle !== currentSection) {
+            currentSection = sectionTitle;
+            lines.push('');
+            lines.push(`## ${sectionTitle}`);
+            lines.push('-'.repeat(40));
+          }
+
+          const checkbox = item.querySelector('.checklist__checkbox');
+          const isChecked = checkbox?.classList.contains('checked');
+          const text = item.querySelector('.checklist__text')?.textContent || '';
+
+          lines.push(`[${isChecked ? 'X' : ' '}] ${text}`);
+        });
+
+        // Add filled fields
+        const filledFields = Object.entries(state.fields);
+        if (filledFields.length > 0) {
+          lines.push('');
+          lines.push('## Recorded Values');
+          lines.push('-'.repeat(40));
+          filledFields.forEach(([id, value]) => {
+            lines.push(`${id}: ${value}`);
+          });
+        }
+
+        // Summary
+        const checkboxes = document.querySelectorAll('.checklist__checkbox');
+        const total = checkboxes.length;
+        const checked = document.querySelectorAll('.checklist__checkbox.checked').length;
+
+        lines.push('');
+        lines.push('='.repeat(60));
+        lines.push(`SUMMARY: ${checked}/${total} tasks completed (${Math.round((checked/total)*100)}%)`);
+        lines.push('='.repeat(60));
+
+        return lines.join('\n');
+      }
+    })();
+  </script>
+  <!-- Vercel Analytics -->
+  <script type="module">
+    import { inject } from 'https://cdn.jsdelivr.net/npm/@vercel/analytics@1/dist/index.mjs';
+    inject();
+  </script>
+</body>
+</html>

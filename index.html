@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rockbot Business Glossary v5.0</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Rockbot Brand Colors - Light theme */
+            --rockbot-dark: #ffffff;
+            --rockbot-navy: #f8f9fc;
+            --rockbot-slate: #ffffff;
+            --rockbot-card: #f3f4f8;
+            --rockbot-purple: #3204AD;
+            --rockbot-purple-light: #4a3aad;
+            --rockbot-purple-soft: rgba(50, 4, 173, 0.08);
+            --rockbot-violet: #552FBC;
+
+            /* Text */
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a68;
+            --text-muted: #8888a0;
+
+            /* Borders */
+            --border: rgba(0, 0, 0, 0.06);
+            --border-strong: rgba(0, 0, 0, 0.12);
+
+            /* Semantic */
+            --warning: #d97706;
+            --warning-soft: rgba(245, 158, 11, 0.12);
+            --success: #059669;
+            --success-soft: rgba(16, 185, 129, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            line-height: 1.65;
+            color: var(--text-secondary);
+            background: var(--rockbot-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, #3204AD 0%, #4a3aad 100%);
+            color: #ffffff;
+            padding: 2rem 2rem 1.75rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            display: none;
+        }
+
+        header .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        header .logo svg {
+            height: 28px;
+            width: auto;
+        }
+
+        header h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.375rem;
+        }
+
+        header .version {
+            display: inline-block;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--rockbot-purple-light);
+            background: var(--rockbot-purple-soft);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            margin-bottom: 1rem;
+        }
+
+        header .subtitle {
+            font-size: 1.0625rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* Section Navigation - hidden on desktop, shown on mobile */
+        nav.section-nav {
+            display: none;
+            background: var(--rockbot-navy);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            position: sticky;
+            top: 60px;
+            z-index: 90;
+        }
+
+        .section-nav .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-nav .nav-brand {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 1rem 0;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav .nav-brand svg {
+            height: 18px;
+            width: auto;
+        }
+
+        .section-nav .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 0;
+            margin: 0;
+        }
+
+        .section-nav .nav-item {
+            position: relative;
+        }
+
+        .section-nav .nav-item > a {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 1rem 0.875rem;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+
+        .section-nav .nav-item > a:hover,
+        .section-nav .nav-item:hover > a,
+        .section-nav .nav-item.active > a {
+            color: var(--text-primary);
+        }
+
+        .section-nav .nav-item.active > a {
+            color: var(--rockbot-purple-light);
+        }
+
+        .section-nav .nav-item.active > a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0.875rem;
+            right: 0.875rem;
+            height: 2px;
+            background: var(--rockbot-purple-light);
+            border-radius: 1px;
+        }
+
+        .section-nav .nav-item > a {
+            position: relative;
+        }
+
+        .section-nav .nav-item > a .chevron {
+            width: 10px;
+            height: 10px;
+            opacity: 0.4;
+            transition: transform 0.2s, opacity 0.15s;
+        }
+
+        .section-nav .nav-item:hover > a .chevron {
+            transform: rotate(180deg);
+            opacity: 0.7;
+        }
+
+        /* Dropdown */
+        .section-nav .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--rockbot-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 10px;
+            padding: 0.5rem 0;
+            min-width: 200px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(6px);
+            transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+        }
+
+        .section-nav .nav-item:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .section-nav .dropdown a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8125rem;
+            transition: background 0.1s, color 0.1s;
+        }
+
+        .section-nav .dropdown a:hover {
+            background: var(--rockbot-purple-soft);
+            color: var(--text-primary);
+        }
+
+        .section-nav .dropdown a.active {
+            color: var(--rockbot-purple-light);
+            background: var(--rockbot-purple-soft);
+        }
+
+        /* Mobile Menu - Simple Implementation */
+        #mobile-menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        #mobile-menu-toggle span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: var(--text-primary);
+            margin: 3px 0;
+        }
+
+        #mobile-menu-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #fff;
+            z-index: 9999;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        #mobile-menu-panel.open {
+            display: block;
+        }
+
+        #mobile-menu-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--rockbot-purple);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #mobile-menu-panel h4 {
+            margin-top: 50px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        #mobile-menu-panel a {
+            display: block;
+            padding: 12px 0;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Main Layout */
+        .container {
+            display: flex;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: var(--rockbot-navy);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0.75rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar h3 {
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            margin-bottom: 0.625rem;
+            margin-top: 1.5rem;
+        }
+
+        .sidebar h3:first-child {
+            margin-top: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0.375rem 0;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8125rem;
+            transition: color 0.15s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: var(--rockbot-purple-light);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 2.5rem 3.5rem;
+            min-width: 0;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 3.5rem;
+            scroll-margin-top: 80px;
+        }
+
+        section h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            padding-bottom: 1rem;
+            margin-bottom: 1.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Term Cards */
+        .term {
+            background: var(--rockbot-slate);
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.5rem;
+            scroll-margin-top: 80px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .term h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.375rem;
+        }
+
+        .term .tagline {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--rockbot-purple-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .term .description {
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+        }
+
+        .term .system-badge {
+            display: inline-block;
+            background: var(--rockbot-card);
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+
+        .term .formerly-known {
+            display: block;
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: -0.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .term .formerly-known code {
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-size: 0.75rem;
+            background: var(--warning-soft);
+            color: var(--warning);
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            font-style: normal;
+        }
+
+        .term h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.625rem;
+        }
+
+        .term > h4:first-of-type {
+            margin-top: 0;
+        }
+
+        .term ul, .term ol {
+            margin-left: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .term li {
+            margin-bottom: 0.375rem;
+        }
+
+        .term li strong {
+            color: var(--text-primary);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--rockbot-card);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* Confusion boxes */
+        .confusion {
+            background: var(--warning-soft);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+        }
+
+        .confusion h4 {
+            color: var(--warning);
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin: 0 0 0.625rem 0;
+        }
+
+        .confusion ul {
+            margin: 0 0 0 1.25rem;
+        }
+
+        /* Example boxes */
+        .example {
+            background: var(--rockbot-purple-soft);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+        }
+
+        .example h4 {
+            color: var(--rockbot-purple-light);
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin: 0 0 0.625rem 0;
+        }
+
+        .example ul {
+            margin: 0 0 0 1.25rem;
+        }
+
+        .example table {
+            background: rgba(0,0,0,0.15);
+            border-radius: 6px;
+            margin: 0.75rem 0;
+        }
+
+        /* Executive Preamble Cards */
+        .exec-card {
+            background: var(--rockbot-purple-soft);
+            border: 1px solid rgba(50, 4, 173, 0.15);
+            border-radius: 12px;
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .exec-card h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--rockbot-purple);
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .exec-card table {
+            border-radius: 8px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .exec-card th, .exec-card td {
+            border-color: var(--border);
+            color: var(--text-secondary);
+        }
+
+        .exec-card th {
+            background: var(--rockbot-card);
+            color: var(--text-primary);
+        }
+
+        .exec-card td strong {
+            color: var(--text-primary);
+        }
+
+        .exec-card tbody tr:hover {
+            background: var(--rockbot-card);
+        }
+
+        /* Purpose list */
+        .purpose-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.625rem;
+            margin: 1.25rem 0;
+            padding: 0;
+        }
+
+        .purpose-list li {
+            background: var(--rockbot-card);
+            padding: 0.875rem 1rem;
+            border-radius: 8px;
+            list-style: none;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.875rem;
+        }
+
+        .purpose-list li::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background: var(--rockbot-purple-light);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Principles */
+        .principles {
+            display: grid;
+            gap: 0.625rem;
+            margin: 1.25rem 0;
+        }
+
+        .principle {
+            background: var(--rockbot-card);
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+        }
+
+        .principle strong {
+            color: var(--text-primary);
+        }
+
+        /* Data Paths */
+        .data-path {
+            background: var(--rockbot-card);
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 0.625rem;
+        }
+
+        .data-path .path-name {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .data-path .path-flow {
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.8125rem;
+            color: var(--rockbot-purple-light);
+        }
+
+        .data-path .path-purpose {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--rockbot-navy);
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.8125rem;
+            margin-bottom: 0.375rem;
+        }
+
+        footer p:first-child {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--rockbot-purple);
+            color: #ffffff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.125rem;
+            font-weight: 600;
+            transition: transform 0.2s, opacity 0.2s, background 0.2s;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(50, 4, 173, 0.3);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            background: #4a3aad;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Floating action buttons container */
+        .floating-actions {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 100;
+        }
+
+        .floating-actions .back-to-top,
+        .floating-actions .doc-link {
+            position: static;
+        }
+
+        .doc-link {
+            background: #4285f4;
+            color: #ffffff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
+        }
+
+        .doc-link:hover {
+            transform: translateY(-3px);
+            background: #3367d6;
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+        }
+
+        .doc-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .sidebar {
+                display: none;
+            }
+
+            nav.section-nav {
+                display: block;
+            }
+
+            main {
+                padding: 2rem;
+                max-width: 100%;
+            }
+
+            .purpose-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .section-nav .nav-links {
+                display: none;
+            }
+
+            #mobile-menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 640px) {
+            header {
+                padding: 1.5rem 1rem 1.25rem;
+            }
+
+            header .subtitle {
+                display: none;
+            }
+
+            nav.section-nav {
+                padding: 0 1rem;
+            }
+
+            main {
+                padding: 1.5rem;
+            }
+
+            .term {
+                padding: 1.25rem 1.5rem;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            th, td {
+                padding: 0.625rem 0.75rem;
+            }
+        }
+
+        /* Print */
+        @media print {
+            .nav, nav.section-nav, .sidebar, .floating-actions, .mobile-nav, .mobile-nav-overlay, .print-btn {
+                display: none !important;
+            }
+
+            header {
+                background: var(--rockbot-purple) !important;
+                padding: 1rem 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            main {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .term {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Universal Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav__inner">
+                <div class="nav__brand">
+                    <span class="nav__brand-accent">Rockbot</span> Revenue Architecture
+                </div>
+                <ul class="nav__links">
+                    <li><a href="index.html" class="nav__link nav__link--active">Glossary</a></li>
+                    <li><a href="deployment-runbook.html" class="nav__link">Deployment</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header id="top">
+        <h1>Business Glossary</h1>
+        <div class="subtitle">A reference guide for leadership, operations, and cross-functional teams</div>
+    </header>
+
+    <nav class="section-nav">
+        <div class="nav-inner">
+            <a href="#top" class="nav-brand">
+                <svg viewBox="0 0 49 48" fill="none" height="24" width="25" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#nav-a)">
+                        <path d="M.33 0h48v48h-48z" fill="#3204AD"></path>
+                        <path d="M42.51 18.36c0-5.9-4.78-10.68-10.66-10.68h-14.8A10.67 10.67 0 0 0 6.38 18.36c0 5.88 4.45 10.34 10.05 10.65L11 40.6h8.4s3.54-7.8 3.84-8.36c.3-.56.46-1.17 1.2-1.17s.97.68 1.18 1.14l3.85 8.38h8.4l-5.42-11.58A10.68 10.68 0 0 0 42.5 18.35h.01Zm-10.66 8.07H28.5L33.9 38h-2.7l-3.23-6.9c-.67-1.36-1.68-2.69-3.53-2.69-1.86 0-2.87 1.33-3.54 2.71L17.69 38h-2.7l5.4-11.57h-3.35a8.08 8.08 0 0 1 0-16.15h14.8a8.07 8.07 0 0 1 0 16.15h.01Z" fill="#fff"></path>
+                        <path d="M31.54 17.1H17.36a1.26 1.26 0 0 0 0 2.51h14.18a1.26 1.26 0 0 0 0-2.51Z" fill="#fff"></path>
+                        <path d="M31.88 12.31H17.13a6.04 6.04 0 0 0 0 12.09h14.75a6.04 6.04 0 0 0 0-12.09Zm-.34 9.59H17.36a3.54 3.54 0 0 1 0-7.09h14.18a3.54 3.54 0 0 1 0 7.09Z" fill="#fff"></path>
+                    </g>
+                    <defs>
+                        <clipPath id="nav-a">
+                            <path d="M.33 19.2c0-6.72 0-10.08 1.31-12.65A12 12 0 0 1 6.9 1.31C9.45 0 12.8 0 19.53 0h9.6c6.72 0 10.08 0 12.65 1.3a12 12 0 0 1 5.25 5.25c1.3 2.57 1.3 5.93 1.3 12.65v9.6c0 6.72 0 10.08-1.3 12.65a12 12 0 0 1-5.25 5.24C39.21 48 35.85 48 29.13 48h-9.6c-6.72 0-10.08 0-12.64-1.3a12 12 0 0 1-5.25-5.25C.34 38.88.34 35.52.34 28.8v-9.6Z" fill="#fff"></path>
+                        </clipPath>
+                    </defs>
+                </svg>
+                Glossary
+            </a>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="#preamble">
+                        Executive Preamble
+                        <svg class="chevron" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5L8 3.5"/></svg>
+                    </a>
+                    <div class="dropdown">
+                        <a href="#purpose">Purpose</a>
+                        <a href="#three-questions">Three Key Questions</a>
+                        <a href="#critical-distinctions">Critical Distinctions</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#core-entities">
+                        Core Entities
+                        <svg class="chevron" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5L8 3.5"/></svg>
+                    </a>
+                    <div class="dropdown">
+                        <a href="#account">Account</a>
+                        <a href="#location">Location</a>
+                        <a href="#zone">Zone</a>
+                        <a href="#contract">Contract</a>
+                        <a href="#contract-line-item">Contract Line Item</a>
+                        <a href="#subscription">Subscription</a>
+                        <a href="#product-line-item">Product Line Item</a>
+                        <a href="#billing-entity">Billing Entity Profile</a>
+                        <a href="#payment-method">Payment Method</a>
+                        <a href="#arr">ARR</a>
+                        <a href="#guidelines">Guidelines</a>
+                        <a href="#domain">Domain</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#relationships">
+                        Relationships
+                        <svg class="chevron" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5L8 3.5"/></svg>
+                    </a>
+                    <div class="dropdown">
+                        <a href="#brand-operator-owner">Brand / Operator / Owner</a>
+                        <a href="#contracting-consuming">Contracting vs. Consuming</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#business-roles">
+                        Business Roles
+                        <svg class="chevron" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5L8 3.5"/></svg>
+                    </a>
+                    <div class="dropdown">
+                        <a href="#customer">Customer</a>
+                        <a href="#partner">Partner</a>
+                        <a href="#franchisor">Franchisor</a>
+                        <a href="#franchisee">Franchisee</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#quick-reference">
+                        Quick Reference
+                        <svg class="chevron" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5L8 3.5"/></svg>
+                    </a>
+                    <div class="dropdown">
+                        <a href="#common-mistakes">Common Mistakes</a>
+                        <a href="#system-of-record">System of Record</a>
+                        <a href="#data-paths">Four Data Paths</a>
+                        <a href="#principles">Key Principles</a>
+                    </div>
+                </li>
+            </ul>
+            <button id="mobile-menu-toggle" type="button">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Panel -->
+    <div id="mobile-menu-panel">
+        <button id="mobile-menu-close" type="button">✕ Close</button>
+
+        <h4>Executive Preamble</h4>
+        <a href="#purpose" class="mobile-link">Purpose</a>
+        <a href="#three-questions" class="mobile-link">Three Key Questions</a>
+        <a href="#critical-distinctions" class="mobile-link">Critical Distinctions</a>
+
+        <h4>Core Business Entities</h4>
+        <a href="#account" class="mobile-link">Account</a>
+        <a href="#location" class="mobile-link">Location</a>
+        <a href="#zone" class="mobile-link">Zone</a>
+        <a href="#contract" class="mobile-link">Contract</a>
+        <a href="#contract-line-item" class="mobile-link">Contract Line Item</a>
+        <a href="#subscription" class="mobile-link">Subscription</a>
+        <a href="#product-line-item" class="mobile-link">Product Line Item</a>
+        <a href="#billing-entity" class="mobile-link">Billing Entity Profile</a>
+        <a href="#payment-method" class="mobile-link">Payment Method</a>
+        <a href="#arr" class="mobile-link">ARR</a>
+        <a href="#guidelines" class="mobile-link">Guidelines</a>
+        <a href="#domain" class="mobile-link">Domain</a>
+
+        <h4>Relationship Concepts</h4>
+        <a href="#brand-operator-owner" class="mobile-link">Brand / Operator / Owner</a>
+        <a href="#contracting-consuming" class="mobile-link">Contracting vs. Consuming</a>
+
+        <h4>Business Roles</h4>
+        <a href="#customer" class="mobile-link">Customer</a>
+        <a href="#partner" class="mobile-link">Partner</a>
+        <a href="#franchisor" class="mobile-link">Franchisor</a>
+        <a href="#franchisee" class="mobile-link">Franchisee</a>
+
+        <h4>Quick Reference</h4>
+        <a href="#common-mistakes" class="mobile-link">Common Mistakes</a>
+        <a href="#system-of-record" class="mobile-link">System of Record</a>
+        <a href="#data-paths" class="mobile-link">Four Data Paths</a>
+        <a href="#principles" class="mobile-link">Key Principles</a>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Executive Preamble</h3>
+            <ul>
+                <li><a href="#purpose">Purpose</a></li>
+                <li><a href="#three-questions">Three Key Questions</a></li>
+                <li><a href="#critical-distinctions">Critical Distinctions</a></li>
+            </ul>
+
+            <h3>Core Business Entities</h3>
+            <ul>
+                <li><a href="#account">Account</a></li>
+                <li><a href="#location">Location</a></li>
+                <li><a href="#zone">Zone</a></li>
+                <li><a href="#contract">Contract</a></li>
+                <li><a href="#contract-line-item">Contract Line Item</a></li>
+                <li><a href="#subscription">Subscription</a></li>
+                <li><a href="#product-line-item">Product Line Item</a></li>
+                <li><a href="#billing-entity">Billing Entity Profile</a></li>
+                <li><a href="#payment-method">Payment Method</a></li>
+                <li><a href="#arr">ARR</a></li>
+                <li><a href="#guidelines">Guidelines</a></li>
+                <li><a href="#domain">Domain</a></li>
+            </ul>
+
+            <h3>Relationship Concepts</h3>
+            <ul>
+                <li><a href="#brand-operator-owner">Brand / Operator / Owner</a></li>
+                <li><a href="#contracting-consuming">Contracting vs. Consuming</a></li>
+            </ul>
+
+            <h3>Business Roles</h3>
+            <ul>
+                <li><a href="#customer">Customer</a></li>
+                <li><a href="#partner">Partner</a></li>
+                <li><a href="#franchisor">Franchisor</a></li>
+                <li><a href="#franchisee">Franchisee</a></li>
+            </ul>
+
+            <h3>Quick Reference</h3>
+            <ul>
+                <li><a href="#common-mistakes">Common Mistakes</a></li>
+                <li><a href="#system-of-record">System of Record</a></li>
+                <li><a href="#data-paths">Four Data Paths</a></li>
+                <li><a href="#principles">Key Principles</a></li>
+            </ul>
+        </aside>
+
+        <main>
+            <!-- EXECUTIVE PREAMBLE -->
+            <section id="preamble">
+                <h2>Executive Preamble</h2>
+
+                <div class="term" id="purpose">
+                    <h3>Purpose</h3>
+                    <p class="description">This glossary defines the core business concepts that drive Rockbot's operations, revenue, and customer relationships. It serves as the authoritative reference for consistent terminology across all teams—from board presentations to daily operations.</p>
+
+                    <h4>Use this document to</h4>
+                    <ul class="purpose-list">
+                        <li>Ensure accurate reporting and metrics</li>
+                        <li>Prevent costly data misunderstandings</li>
+                        <li>Onboard new team members quickly</li>
+                        <li>Align cross-functional communication</li>
+                    </ul>
+                </div>
+
+                <div class="exec-card" id="three-questions">
+                    <h3>The Three Questions Every Executive Asks</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Answer</th>
+                                <th>Key Insight</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>"How many customers do we have?"</strong></td>
+                                <td>Count of Contracting Customers</td>
+                                <td>Billing entities are not customers. Contracting Customer count is much smaller than billing arrangement count. Use Consuming Customer count for utilization metrics.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>"What's our total ARR?"</strong></td>
+                                <td>Sum of Contracted ARR</td>
+                                <td>Use Contracted ARR for forecasting. Consumed ARR shows utilization. Never add them together.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>"Who pays for what?"</strong></td>
+                                <td>Billing Entity → Subscription → Zone</td>
+                                <td>The company relationship (Account) is separate from who receives invoices (Billing Entity).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="term" id="critical-distinctions">
+                    <h3>Critical Distinctions</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>These Are Different</th>
+                                <th>Why It Matters</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Account vs. Billing Entity</strong></td>
+                                <td>One customer can have many invoicing arrangements</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Location vs. Zone</strong></td>
+                                <td>One address can have multiple hardware units</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Contract vs. Subscription</strong></td>
+                                <td>What we agreed vs. what we're actually delivering</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Contracted vs. Consumed ARR</strong></td>
+                                <td>Promise vs. reality—especially in franchise deals</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Brand vs. Operator vs. Owner</strong></td>
+                                <td>Three different companies can be involved in one location</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Contracting Customer vs. Consuming Customer</strong></td>
+                                <td>Who signs vs. who uses—critical for franchise reporting</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- CORE ENTITIES -->
+            <section id="core-entities">
+                <h2>Core Business Entities</h2>
+
+                <!-- Account -->
+                <div class="term" id="account">
+                    <h3>Account</h3>
+                    <p class="tagline">The business we do business with.</p>
+                    <p class="description">An Account represents a single legal business entity—the company behind the relationship, regardless of how many locations they operate, contracts they sign, or ways they pay. One company = one Account, always.</p>
+                    <span class="system-badge">System of Record: Salesforce (primary), synced to NetSuite and Admin Platform</span>
+
+                    <h4>Why It Matters</h4>
+                    <p>Account is the foundation of all customer metrics. When we count "customers," we count Accounts. When we measure customer health, retention, or lifetime value, we measure at the Account level. Getting this wrong inflates customer counts and distorts strategic decisions.</p>
+
+                    <h4>Key Attributes</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Attribute</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Name</strong></td><td>Legal business entity (e.g., "Planet Fitness Holdings LLC")</td></tr>
+                            <tr><td><strong>Record Type</strong></td><td>Customer, Partner, or Franchisor</td></tr>
+                            <tr><td><strong>Contracted ARR</strong></td><td>Total value committed across all contracts</td></tr>
+                            <tr><td><strong>Consumed ARR</strong></td><td>Actual revenue being generated</td></tr>
+                            <tr><td><strong>Location Count</strong></td><td>Physical sites associated with this account</td></tr>
+                            <tr><td><strong>Contract Count</strong></td><td>Number of active contracts</td></tr>
+                            <tr><td><strong>Customer Status</strong></td><td>Active, Inactive, or Former (derived)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Business Rules</h4>
+                    <ol>
+                        <li>One Account per legal entity—never duplicate for payment or contract changes</li>
+                        <li>Record type determines available fields and processes</li>
+                        <li>Parent-child relationships only between same record type</li>
+                        <li>Contracted ARR and Consumed ARR tracked separately (differ in franchise scenarios)</li>
+                    </ol>
+
+                    <div class="confusion">
+                        <h4>Common Confusion</h4>
+                        <ul>
+                            <li><strong>Account is not Billing Entity</strong> — Who pays invoices is tracked separately</li>
+                            <li><strong>Account is not Payment Method</strong> — Changing credit cards doesn't create a new Account</li>
+                            <li><strong>One company with 50 franchises = ONE Account</strong>, not 50</li>
+                        </ul>
+                    </div>
+
+                    <div class="example">
+                        <h4>Example</h4>
+                        <p><strong>Planet Fitness</strong> is one Account. They have thousands of locations, multiple franchisors operating under their brand, and dozens of different billing arrangements—but in our system, Planet Fitness is a single Account with significant Contracted ARR.</p>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="term" id="location">
+                    <h3>Location</h3>
+                    <p class="tagline">A physical place where Rockbot delivers service.</p>
+                    <p class="description">A Location is a real-world address—a gym, restaurant, retail store, or any brick-and-mortar site with Rockbot hardware installed. Locations exist independently of who owns, operates, or brands them.</p>
+                    <span class="system-badge">System of Record: Salesforce (Physical_Location__c custom object)</span>
+
+                    <h4>Why It Matters</h4>
+                    <p>Location count is a key operational metric. It answers "How many places do we serve?" and drives hardware deployment, support coverage, and market penetration analysis. Locations also reveal the complex relationships in franchise businesses.</p>
+
+                    <h4>Key Attributes</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Attribute</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Physical Address</strong></td><td>Street, city, state, postal code (required)</td></tr>
+                            <tr><td><strong>Location Type</strong></td><td>Single-Tenant, Multi-Tenant, Shared-Facility, or Mobile</td></tr>
+                            <tr><td><strong>Brand</strong></td><td>The brand customers see (e.g., Planet Fitness)</td></tr>
+                            <tr><td><strong>Operator</strong></td><td>Who manages daily operations (e.g., Blackduck Partners)</td></tr>
+                            <tr><td><strong>Owner</strong></td><td>Property owner, if tracked</td></tr>
+                            <tr><td><strong>Primary Account</strong></td><td>Formula field: returns Brand if populated, else Operator, else Owner</td></tr>
+                            <tr><td><strong>Guidelines</strong></td><td>Brand standards applied to this location</td></tr>
+                            <tr><td><strong>Zone Count</strong></td><td>Hardware units installed at this address</td></tr>
+                            <tr><td><strong>Total ARR</strong></td><td>Revenue generated from this location</td></tr>
+                            <tr><td><strong>Status</strong></td><td>Active, Inactive, Pending, or Closed</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>The Three Location Relationships</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Relationship</th><th>Question It Answers</th><th>Required</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Brand</strong></td><td>"What brand do customers see?"</td><td>Yes</td><td>Planet Fitness</td></tr>
+                            <tr><td><strong>Operator</strong></td><td>"Who runs this location?"</td><td>No</td><td>Blackduck Partners</td></tr>
+                            <tr><td><strong>Owner</strong></td><td>"Who owns the property?"</td><td>No</td><td>Main Street Properties LLC</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Business Rules</h4>
+                    <ol>
+                        <li>Location defined by physical address, not Account ownership</li>
+                        <li>At least one of Brand, Operator, or Owner should be populated</li>
+                        <li>Brand typically populated for franchise locations; Operator for franchisee management</li>
+                        <li>Every Zone must have a parent Location</li>
+                        <li>One Location can have Zones from multiple Subscriptions (split billing)</li>
+                    </ol>
+
+                    <div class="confusion">
+                        <h4>Common Confusion</h4>
+                        <ul>
+                            <li><strong>Location is not Account</strong> — A location is a <em>place</em>, not a <em>company</em></li>
+                            <li><strong>One location can involve multiple Accounts</strong> (Brand, Operator, Owner)</li>
+                            <li><strong>Locations are defined by address</strong>, not by business relationship</li>
+                        </ul>
+                    </div>
+
+                    <div class="example">
+                        <h4>Example</h4>
+                        <p>The Planet Fitness gym at <strong>123 Main St, Boston</strong> is one Location.</p>
+                        <table>
+                            <tr><td><strong>Brand</strong></td><td>Planet Fitness (the customer sees Planet Fitness branding)</td></tr>
+                            <tr><td><strong>Operator</strong></td><td>Blackduck Partners (the franchisor running this gym)</td></tr>
+                            <tr><td><strong>Owner</strong></td><td>Not tracked</td></tr>
+                        </table>
+                        <p>This single Location has 4 Zones (cardio, weights, lobby, locker room), each generating monthly revenue.</p>
+                    </div>
+                </div>
+
+                <!-- Zone -->
+                <div class="term" id="zone">
+                    <h3>Zone</h3>
+                    <p class="tagline">Individual hardware delivering Rockbot services.</p>
+                    <p class="description">A Zone is a single hardware unit—a screen or media player—installed at a specific area within a Location. It's where service actually happens: the TV in the cardio area, the display behind the front desk. Zone also functions as a junction object connecting physical Locations with billing Subscriptions.</p>
+                    <span class="system-badge">System of Record: Salesforce (Zone__c, master), synced to NetSuite (billing) and Admin Platform</span>
+                    <p class="formerly-known">Note: "Venue" is deprecated legacy terminology for Zone. All new documentation should use "Zone" exclusively.</p>
+
+                    <h4>Why It Matters</h4>
+                    <p>Zones are the atomic unit of service delivery and billing. ARR flows up from Zones. When we ask "What are we charging for?", the answer is Zones. Each Zone connects a physical Location to one or more billing Subscriptions.</p>
+
+                    <h4>Business Rules</h4>
+                    <ol>
+                        <li>Every Zone must belong to exactly one Location</li>
+                        <li>One Zone can have multiple Subscriptions (e.g., music subscription + digital signage subscription)</li>
+                        <li>One Location can have multiple Zones under different Subscriptions</li>
+                        <li>Zone ARR = sum of Product Line Item monthly values across all its Subscriptions</li>
+                    </ol>
+
+                    <div class="confusion">
+                        <h4>Common Confusion</h4>
+                        <ul>
+                            <li><strong>Zone is not Location</strong> — Multiple zones can exist at one location</li>
+                            <li><strong>Zone is not Subscription</strong> — One zone can have multiple subscriptions for different services</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contract -->
+                <div class="term" id="contract">
+                    <h3>Contract</h3>
+                    <p class="tagline">The formal agreement defining what we'll deliver and at what price.</p>
+                    <p class="description">A Contract is the legal agreement between Rockbot and a customer Account. It defines the rates, terms, duration, and scope of services we've committed to provide. Contracts establish the financial relationship; Subscriptions fulfill it.</p>
+                    <span class="system-badge">System of Record: Salesforce (source of truth), PandaDoc (document creation)</span>
+
+                    <h4>Why It Matters</h4>
+                    <p>Contracts are the source of Contracted ARR—the revenue we've promised. They determine pricing for all downstream billing. When rates need to change, we modify Contracts. When we want to know "what did we agree to?", we look at Contracts.</p>
+
+                    <h4>Key Attributes</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Attribute</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Account</strong></td><td>The customer this contract belongs to</td></tr>
+                            <tr><td><strong>Start Date / End Date</strong></td><td>Contract term</td></tr>
+                            <tr><td><strong>Status</strong></td><td>Draft, Active, Expired, Terminated</td></tr>
+                            <tr><td><strong>Contract Line Items</strong></td><td>Specific products and rates included</td></tr>
+                            <tr><td><strong>Contracted ARR</strong></td><td>Total annual value committed</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="confusion">
+                        <h4>Common Confusion</h4>
+                        <ul>
+                            <li><strong>Contract is not Subscription</strong> — Contract = what we agreed; Subscription = what we're delivering</li>
+                            <li><strong>One Contract can have multiple Subscriptions</strong> as zones are added over time</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contract Line Item -->
+                <div class="term" id="contract-line-item">
+                    <h3>Contract Line Item</h3>
+                    <p class="tagline">A specific product or service with its contracted rate.</p>
+                    <p class="description">Contract Line Items are the individual lines within a Contract that specify which products the customer has purchased and at what price. They're the pricing source for Product Line Items on Subscriptions.</p>
+                    <span class="system-badge">System of Record: Salesforce, synced to NetSuite</span>
+
+                    <h4>Key Attributes</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Attribute</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Contract</strong></td><td>Parent contract</td></tr>
+                            <tr><td><strong>Product</strong></td><td>The service being provided</td></tr>
+                            <tr><td><strong>Monthly Rate</strong></td><td>Price per month</td></tr>
+                            <tr><td><strong>Quantity</strong></td><td>Number of units contracted</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Subscription -->
+                <div class="term" id="subscription">
+                    <h3>Subscription</h3>
+                    <p class="tagline">The billing arrangement that collects revenue for delivered services.</p>
+                    <p class="description">A Subscription is the billing mechanism that connects a Contract to actual service delivery. It groups Zones together for invoicing purposes and tracks what's actually being consumed versus what was contracted.</p>
+                    <span class="system-badge">System of Record: NetSuite (NetSuite_Subscription__c, primary), synced to Salesforce</span>
+
+                    <h4>Zone-Subscription Relationship</h4>
+                    <p>Zones and Subscriptions have a many-to-many relationship. One Zone can have multiple Subscriptions (e.g., a single screen receiving both music service and digital signage). One Subscription can cover multiple Zones (e.g., a single billing arrangement for all zones at a location).</p>
+
+                    <div class="example">
+                        <h4>Current System Constraint</h4>
+                        <p><strong>NetSuite Limitation:</strong> NetSuite currently forces a one-to-one relationship between Subscriptions and Zones. When a Zone needs multiple services or a different billing entity, operations creates separate Subscriptions as a workaround. The Salesforce architecture is designed to eventually support the correct many-to-many model.</p>
+                    </div>
+
+                    <h4>Why It Matters</h4>
+                    <p>Subscriptions are where revenue actually happens. They track Consumed ARR—what we're billing for right now. The gap between Contracted ARR (from Contracts) and Consumed ARR (from Subscriptions) reveals ramp-up progress or utilization issues.</p>
+
+                    <h4>Key Attributes</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Attribute</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Contract</strong></td><td>Parent contract defining rates</td></tr>
+                            <tr><td><strong>Billing Entity</strong></td><td>Who receives invoices</td></tr>
+                            <tr><td><strong>Zones</strong></td><td>Hardware units covered by this subscription</td></tr>
+                            <tr><td><strong>Product Line Items</strong></td><td>Actual services being delivered and billed</td></tr>
+                            <tr><td><strong>Status</strong></td><td>Active, Suspended, Cancelled</td></tr>
+                            <tr><td><strong>Consumed ARR</strong></td><td>Annual revenue from active Product Line Items</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="confusion">
+                        <h4>Common Confusion</h4>
+                        <ul>
+                            <li><strong>Subscription is not Contract</strong> — Many Subscriptions can exist under one Contract</li>
+                            <li><strong>Subscription is not Billing Entity</strong> — Subscription is what; Billing Entity is who</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Product Line Item -->
+                <div class="term" id="product-line-item">
+                    <h3>Product Line Item</h3>
+                    <p class="tagline">A specific service being delivered and billed on a Subscription.</p>
+                    <p class="description">Product Line Items represent the actual services being delivered to a specific Zone under a Subscription. They inherit rates from Contract Line Items and generate the charges that appear on invoices.</p>
+                    <span class="system-badge">System of Record: NetSuite, synced to Salesforce</span>
+
+                    <h4>Business Rules</h4>
+                    <ol>
+                        <li>Rates must reference Contract Line Items—never enter manually</li>
+                        <li>Product Line Item ARR rolls up to Subscription and Account Consumed ARR</li>
+                        <li>Each Product Line Item connects to one Zone</li>
+                    </ol>
+                </div>
+
+                <!-- Billing Entity -->
+                <div class="term" id="billing-entity">
+                    <h3>Billing Entity Profile</h3>
+                    <p class="tagline">Who receives invoices and makes payments.</p>
+                    <p class="description">A Billing Entity represents an invoicing arrangement—a specific entity that receives bills and makes payments. One Account can have multiple Billing Entities (different divisions, franchisees, or payment arrangements), but each Billing Entity belongs to one Account.</p>
+                    <span class="system-badge">System of Record: NetSuite (primary), synced to Salesforce</span>
+
+                    <h4>Why It Matters</h4>
+                    <p>Billing Entity separates "who is our customer" (Account) from "who pays the bills" (Billing Entity). This distinction is critical: our customer count (Accounts) is far smaller than our billing arrangement count (Billing Entities).</p>
+
+                    <h4>Business Rules</h4>
+                    <ol>
+                        <li>Billing Entity is about who, not how—payment method changes don't create new Billing Entities</li>
+                        <li>One Account can have multiple Billing Entities</li>
+                        <li>Each Billing Entity has one or more Payment Methods</li>
+                    </ol>
+
+                    <div class="confusion">
+                        <h4>Common Confusion</h4>
+                        <ul>
+                            <li><strong>Billing Entity is not Customer</strong> — Billing entity count ≠ customer count</li>
+                            <li><strong>Billing Entity is not Account</strong> — Many Billing Entities can exist under one Account</li>
+                            <li><strong>Card expired?</strong> Update Payment Method, don't create new Billing Entity</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="term" id="payment-method">
+                    <h3>Payment Method</h3>
+                    <p class="tagline">How a Billing Entity pays their invoices.</p>
+                    <p class="description">Payment Method tracks the specific instrument used to pay—credit card, ACH, check, etc. Payment Methods belong to Billing Entities and can change without affecting the billing relationship.</p>
+                    <span class="system-badge">System of Record: NetSuite + Paystand</span>
+
+                    <h4>Key Point</h4>
+                    <p>When a credit card expires or a customer switches banks, we update the Payment Method—not the Billing Entity or Account. This preserves invoice history and reporting continuity.</p>
+                </div>
+
+                <!-- ARR -->
+                <div class="term" id="arr">
+                    <h3>ARR (Annual Recurring Revenue)</h3>
+                    <p class="tagline">The annual value of recurring revenue, measured two ways.</p>
+
+                    <h4>Contracted ARR</h4>
+                    <p>The total annual value committed in signed Contracts. Use for forecasting, investor reporting, and capacity planning. Source: Contract Line Items.</p>
+
+                    <h4>Consumed ARR</h4>
+                    <p>The actual annual revenue being generated by active Subscriptions. Use for cash flow analysis and utilization tracking. Source: Product Line Items (via NetSuite_Subscription__c.ARR__c).</p>
+
+                    <h4>ARR Date Semantics</h4>
+                    <p>ARR calculations depend on understanding three distinct dates that often differ—especially in enterprise and franchise deals:</p>
+                    <table>
+                        <thead>
+                            <tr><th>Date Type</th><th>Source Field</th><th>Definition</th><th>Use For</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Contract Date</strong></td>
+                                <td>Contract__c.StartDate</td>
+                                <td>Date the agreement was legally executed</td>
+                                <td>Forecasting, "deals closed" reporting, Contracted ARR start</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Service Billing Start</strong></td>
+                                <td>NetSuite_Subscription__c.Start_Date__c</td>
+                                <td>Date billing charges begin (first invoice date)</td>
+                                <td>Cash flow, MRR/ARR recognition, Consumed ARR start</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Activation Date</strong></td>
+                                <td>Zone__c.Activation_Date__c</td>
+                                <td>Date hardware went live and service began</td>
+                                <td>Utilization tracking, consumption metrics</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example">
+                        <h4>Why Date Distinctions Matter</h4>
+                        <p>In enterprise and franchise deals, these dates routinely differ by weeks or months:</p>
+                        <ul>
+                            <li><strong>Contract signed</strong> = Committed ARR starts counting toward pipeline/forecast</li>
+                            <li><strong>Billing starts</strong> = Recognized revenue begins (financial reporting)</li>
+                            <li><strong>Activation</strong> = Consumed ARR counts toward utilization metrics</li>
+                        </ul>
+                        <p style="margin-top: 0.75rem;"><strong>Example:</strong> Planet Fitness signs a master contract on <strong>January 15</strong> (Contracted ARR: $1M added to forecast). First locations begin billing on <strong>March 1</strong> (MRR recognition begins). Last locations activate <strong>June 30</strong> (Full Consumed ARR achieved).</p>
+                    </div>
+
+                    <div class="confusion">
+                        <h4>Critical Rule</h4>
+                        <ul>
+                            <li><strong>Never add Contracted and Consumed ARR together</strong> — They measure different things</li>
+                            <li>Gap between them = ramp-up remaining or over-utilization</li>
+                            <li>In franchise deals, one Account's Contracted ARR may be consumed by many Operator Accounts</li>
+                            <li><strong>Use Contract Date for forecasting</strong>, Service Billing Start for revenue recognition</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Guidelines -->
+                <div class="term" id="guidelines">
+                    <h3>Guidelines</h3>
+                    <span class="formerly-known">Formerly known as <code>Logo__c</code> in Salesforce</span>
+                    <p class="tagline">Brand-specific content rules applied to Locations.</p>
+                    <p class="description">Guidelines define what content can play at a Location—the music genres, video types, and messaging approved by the Brand. They ensure consistency across all locations operating under a brand's standards.</p>
+                    <span class="system-badge">System of Record: Salesforce, synced to Admin Platform</span>
+                </div>
+
+                <!-- Domain -->
+                <div class="term" id="domain">
+                    <h3>Domain</h3>
+                    <p class="tagline">A web identity used for lead routing and account deduplication.</p>
+                    <p class="description">A Domain represents website ownership tied to an Account. Domains serve two critical operational functions: routing inbound leads to the correct Account, and preventing duplicate account creation when prospects use secondary or redirect URLs.</p>
+                    <span class="system-badge">System of Record: Salesforce (Domain__c)</span>
+
+                    <h4>Key Fields</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Field</th><th>Purpose</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Domain_URL__c</strong></td><td>Raw input as entered</td><td>https://www.planetfitness.com/locations</td></tr>
+                            <tr><td><strong>Clean_Domain__c</strong></td><td>Normalized, unique External ID for matching</td><td>planetfitness.com</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Business Rules</h4>
+                    <ol>
+                        <li>One Account can have many Domains (redirects, regional sites, etc.)</li>
+                        <li>One Domain can only exist on one Account</li>
+                        <li>When a lead comes in via any Domain, it routes to the associated Account</li>
+                    </ol>
+
+                    <h4>Why It Matters</h4>
+                    <p>Without proper Domain mapping, inbound leads from secondary websites would create duplicate accounts. For example, if a prospect fills out a form on a regional redirect URL, the Domain object ensures they're matched to the existing parent Account rather than creating a new record.</p>
+                </div>
+            </section>
+
+            <!-- RELATIONSHIP CONCEPTS -->
+            <section id="relationships">
+                <h2>Relationship Concepts</h2>
+
+                <!-- Brand/Operator/Owner -->
+                <div class="term" id="brand-operator-owner">
+                    <h3>Brand / Operator / Owner</h3>
+                    <p class="tagline">The three ways an Account can relate to a Location.</p>
+                    <p class="description">Every Location can have up to three Account relationships, each answering a different question about who's involved with that physical site.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Role</th><th>Question</th><th>Typical Use</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Brand</strong></td>
+                                <td>"What name is on the door?"</td>
+                                <td>Franchise parent (e.g., Planet Fitness)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Operator</strong></td>
+                                <td>"Who manages day-to-day?"</td>
+                                <td>Franchisee running the location (e.g., Blackduck Partners)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Owner</strong></td>
+                                <td>"Who owns the property?"</td>
+                                <td>Real estate owner, if relevant</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example">
+                        <h4>Example</h4>
+                        <p>A Planet Fitness location in Boston might have:</p>
+                        <ul>
+                            <li><strong>Brand:</strong> Planet Fitness (national brand)</li>
+                            <li><strong>Operator:</strong> Blackduck Partners (regional franchise operator)</li>
+                            <li><strong>Owner:</strong> Not tracked (not relevant to our business)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contracting vs Consuming -->
+                <div class="term" id="contracting-consuming">
+                    <h3>Contracting Account vs. Consuming Account</h3>
+                    <p class="tagline">Who signs the deal vs. who uses the service.</p>
+
+                    <h4>Contracting Account</h4>
+                    <p>The Account that signs the Contract and commits to the ARR. This is where Contracted ARR is tracked.</p>
+
+                    <h4>Consuming Account</h4>
+                    <p>The Account(s) that actually use the service at Locations. Consumed ARR rolls up here.</p>
+
+                    <div class="example">
+                        <h4>Example</h4>
+                        <p><strong>Planet Fitness</strong> signs a master contract for a large ARR commitment (Contracting Account). But the actual service is delivered to locations operated by various franchisors like <strong>Blackduck Partners</strong> (Consuming Accounts). Planet Fitness holds the Contracted ARR; each franchisor has Consumed ARR proportional to their locations.</p>
+                    </div>
+
+                    <h4>Contract Inheritance and Termination</h4>
+                    <p>When a master contract is terminated, consuming entities must transition their service. Typical outcomes include:</p>
+                    <ol>
+                        <li><strong>Independent contract activation:</strong> The consuming entity signs their own contract at their locations, becoming both contracting and consuming party</li>
+                        <li><strong>Service discontinuation:</strong> Locations under the terminated contract are deactivated</li>
+                        <li><strong>Contract transfer:</strong> A new contracting party assumes the master agreement (requires legal renegotiation)</li>
+                    </ol>
+                    <p>The transition path depends on whether the consuming entity has an existing Account relationship and their willingness to contract directly.</p>
+                </div>
+            </section>
+
+            <!-- BUSINESS ROLES -->
+            <section id="business-roles">
+                <h2>Business Roles</h2>
+
+                <!-- Customer -->
+                <div class="term" id="customer">
+                    <h3>Customer</h3>
+                    <p class="tagline">An Account with Record Type = Customer.</p>
+                    <p class="description">Customers are the businesses that contract for Rockbot services. They can be the contracting party, the consuming party, or both. Customer count = Account count where Record Type = Customer.</p>
+
+                    <div class="confusion">
+                        <h4>Common Confusion</h4>
+                        <ul>
+                            <li><strong>Customer is not Billing Entity</strong> — Customer count is far smaller than billing entity count</li>
+                            <li><strong>One customer can have hundreds of locations</strong> — Planet Fitness is one customer with thousands of locations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contracting Customer -->
+                <div class="term" id="contracting-customer">
+                    <h3>Contracting Customer</h3>
+                    <p class="tagline">A Customer Account that has signed a contract with Rockbot.</p>
+                    <p class="description">Contracting Customers are the entities with purchasing authority—they sign contracts, commit to ARR, and control upgrades, downgrades, and renewals. Use this count when reporting on contractual relationships or forecasting.</p>
+
+                    <h4>Use For</h4>
+                    <p>Sales pipeline reporting, ARR forecasting, customer acquisition metrics, renewal tracking.</p>
+
+                    <h4>Key Distinction</h4>
+                    <p>A Contracting Customer may have no active Zones if they're in ramp-up or have churned operationally while maintaining a contract.</p>
+                </div>
+
+                <!-- Consuming Customer -->
+                <div class="term" id="consuming-customer">
+                    <h3>Consuming Customer</h3>
+                    <p class="tagline">A Customer Account that is actively using Rockbot services at one or more Locations.</p>
+                    <p class="description">Consuming Customers have active Zones delivering service. They may or may not be the same entity as the Contracting Customer. Use this count when reporting on service delivery or utilization.</p>
+
+                    <h4>Use For</h4>
+                    <p>Utilization reporting, support coverage planning, operational metrics, consumption analysis.</p>
+
+                    <h4>Key Distinction</h4>
+                    <p>A Consuming Customer may not have a direct contract if service is delivered under a master agreement held by a different entity (common in franchise scenarios).</p>
+                </div>
+
+                <!-- Active Customer -->
+                <div class="term" id="active-customer">
+                    <h3>Active Customer</h3>
+                    <p class="tagline">A Customer Account that has both an active contract AND active service consumption.</p>
+                    <p class="description">Active Customers represent the healthiest customer relationships—they've committed contractually AND are actively using the service. This is typically the most meaningful customer count for retention and health metrics.</p>
+
+                    <p><strong>Formula:</strong> Active Customer = Contracting Customer ∩ Consuming Customer (has both)</p>
+
+                    <h4>Use For</h4>
+                    <p>Customer health dashboards, retention analysis, executive reporting, board presentations.</p>
+                </div>
+
+                <!-- Partner -->
+                <div class="term" id="partner">
+                    <h3>Partner</h3>
+                    <p class="tagline">An Account with Record Type = Partner.</p>
+                    <p class="description">Partners are businesses that resell or distribute Rockbot services. They bring us customers but aren't the end users. Partners earn commissions or referral fees tracked through Partner attribution.</p>
+
+                    <h4>Partner Attribution</h4>
+                    <p>When a Partner sources a deal, the Contract or Subscription tracks the Partner Account for commission and reporting purposes.</p>
+                </div>
+
+                <!-- Franchisor -->
+                <div class="term" id="franchisor">
+                    <h3>Franchisor</h3>
+                    <p class="tagline">An Account with Record Type = Franchisor.</p>
+                    <p class="description">Franchisors are operating entities that manage multiple locations under one or more brand licenses. In Rockbot's simplified model, the Franchisor is typically the contracting party for locations they operate—they sign contracts and commit ARR on behalf of their location portfolio.</p>
+                    <span class="system-badge">System of Record: Salesforce (Account object with Record Type = Franchisor)</span>
+
+                    <h4>Alternative Terminology</h4>
+                    <p>Some franchise systems use different terms for this role. In Subway's franchise model, this entity is called a "Development Agent"—the company that holds development rights for a territory and manages franchisees within it. Regardless of the industry term used, Rockbot tracks these entities as Franchisor accounts.</p>
+
+                    <h4>Why It Matters</h4>
+                    <p>Franchisors are often the primary business relationship in franchise scenarios. A single franchisor may operate hundreds of locations across multiple brands, making them significant contracting partners.</p>
+
+                    <h4>Business Rules</h4>
+                    <ol>
+                        <li>Franchisors typically contract ARR for their locations</li>
+                        <li>One Franchisor can operate locations across multiple Brands</li>
+                        <li>Franchisor appears on Location records as the Operator</li>
+                        <li>Use Franchisor record type to differentiate from standard Customer accounts</li>
+                    </ol>
+
+                    <div class="example">
+                        <h4>Example: Hamra Enterprises</h4>
+                        <p>Hamra operates Panera Bread, Wendy's, and Noodles & Company locations. In Rockbot's system:</p>
+                        <ul>
+                            <li>Hamra = Franchisor Account (Record Type: Franchisor)</li>
+                            <li>Each brand = separate Brand Account relationship on Locations</li>
+                            <li>Hamra contracts ARR and manages service for all their locations regardless of brand</li>
+                        </ul>
+                    </div>
+
+                    <div class="confusion">
+                        <h4>Common Confusion</h4>
+                        <ul>
+                            <li><strong>Franchisor is not Partner</strong> — Franchisors don't sell for us; they operate locations and contract services</li>
+                            <li><strong>Franchisor IS typically the contracting party</strong> — They sign contracts for their location portfolio</li>
+                            <li><strong>One Franchisor, multiple Brands</strong> — A franchisor account relates to multiple brands through their locations, not through account hierarchy</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Franchisee -->
+                <div class="term" id="franchisee">
+                    <h3>Franchisee (Location Characteristic)</h3>
+                    <p class="tagline">A Location operated by a franchisor on behalf of a brand.</p>
+                    <p class="description">Franchisee is not a separate object or Account type—it's a characteristic of a Location. Any Location where Brand and Operator are different Accounts is a franchised location. The Operator in this scenario is typically a Franchisor account.</p>
+                    <p><strong>Formula:</strong> Brand + different Operator = Franchised Location</p>
+
+                    <div class="confusion">
+                        <h4>Important</h4>
+                        <p>While "franchisor" and "franchisee" are sometimes used interchangeably in casual conversation, they refer to different things in Rockbot's data model. <strong>Franchisor</strong> is an Account Record Type; <strong>Franchisee</strong> is a Location characteristic. Do not use these terms interchangeably in reporting or system documentation.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QUICK REFERENCE -->
+            <section id="quick-reference">
+                <h2>Quick Reference</h2>
+
+                <!-- Common Mistakes -->
+                <div class="term" id="common-mistakes">
+                    <h3>Common Mistakes to Avoid</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Wrong</th><th>Right</th><th>Why</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Creating new Account when payment method changes</td>
+                                <td>Add new Payment Method to existing Billing Entity</td>
+                                <td>Preserves relationship history</td>
+                            </tr>
+                            <tr>
+                                <td>"We have X billing entities as customers"</td>
+                                <td>"We have Y customers with X billing arrangements"</td>
+                                <td>Billing Entity is not Customer</td>
+                            </tr>
+                            <tr>
+                                <td>Contract = Subscription</td>
+                                <td>Contract defines rates; Subscription = consumption</td>
+                                <td>Different concepts, different purposes</td>
+                            </tr>
+                            <tr>
+                                <td>Manually entering rates on Product Line Items</td>
+                                <td>Reference Contract Line Item</td>
+                                <td>Ensures billing matches contract</td>
+                            </tr>
+                            <tr>
+                                <td>Using "Venue" in new documentation</td>
+                                <td>Use "Zone"</td>
+                                <td>Venue is deprecated terminology</td>
+                            </tr>
+                            <tr>
+                                <td>Assuming franchisors don't contract</td>
+                                <td>Franchisors typically DO contract ARR</td>
+                                <td>They're often the primary contracting party</td>
+                            </tr>
+                            <tr>
+                                <td>Using "franchisor" and "franchisee" interchangeably</td>
+                                <td>Franchisor = Account type; Franchisee = Location characteristic</td>
+                                <td>Different objects in the data model</td>
+                            </tr>
+                            <tr>
+                                <td>Using Contract Date for revenue recognition</td>
+                                <td>Use Service Billing Start Date</td>
+                                <td>Contract Date ≠ when billing begins</td>
+                            </tr>
+                            <tr>
+                                <td>Counting Contracted ARR as revenue</td>
+                                <td>Only Consumed ARR is recognized revenue</td>
+                                <td>Contracted is commitment; Consumed is actuals</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- System of Record -->
+                <div class="term" id="system-of-record">
+                    <h3>System of Record vs. Source of Truth</h3>
+                    <p class="description">These terms are often conflated but serve different purposes in Rockbot's architecture.</p>
+                    
+                    <h4>Definitions</h4>
+                    <p><strong>System of Record:</strong> Where content is created. The system where data originates and is initially captured.</p>
+                    <p><strong>Source of Truth:</strong> Where systems go to access authoritative data. The reference point all other systems use for that information.</p>
+
+                    <div class="example">
+                        <h4>Example</h4>
+                        <p><strong>Contracts:</strong> PandaDoc is the system of record (where documents are created and signed), but Salesforce is the source of truth (where all systems reference contract data).</p>
+                        <p><strong>Subscriptions:</strong> NetSuite is currently the system of record, but Salesforce subscriptions should eventually drive NetSuite subscription creation—reversing the flow.</p>
+                    </div>
+
+                    <h4>Entity Reference</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Entity</th><th>Primary System</th><th>Salesforce Object</th><th>Syncs To</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Account</strong></td><td>Salesforce</td><td>Account</td><td>NetSuite, Admin Platform</td></tr>
+                            <tr><td><strong>Location</strong></td><td>Salesforce</td><td>Physical_Location__c</td><td>Admin Platform</td></tr>
+                            <tr><td><strong>Zone</strong></td><td>Salesforce</td><td>Zone__c</td><td>NetSuite, Admin Platform</td></tr>
+                            <tr><td><strong>Contract</strong></td><td>Salesforce</td><td>Contract__c</td><td>NetSuite</td></tr>
+                            <tr><td><strong>Contract Line Item</strong></td><td>Salesforce</td><td>Contract_Line_Item__c</td><td>NetSuite</td></tr>
+                            <tr><td><strong>Subscription</strong></td><td>NetSuite</td><td>NetSuite_Subscription__c</td><td>Salesforce</td></tr>
+                            <tr><td><strong>Product Line Item</strong></td><td>NetSuite</td><td>—</td><td>Salesforce</td></tr>
+                            <tr><td><strong>Billing Entity</strong></td><td>NetSuite</td><td>NetSuite_Billing_Account__c</td><td>Salesforce</td></tr>
+                            <tr><td><strong>Payment Method</strong></td><td>NetSuite + Paystand</td><td>—</td><td>—</td></tr>
+                            <tr><td><strong>Guidelines</strong></td><td>Salesforce</td><td>Guidelines__c</td><td>Admin Platform</td></tr>
+                            <tr><td><strong>Domain</strong></td><td>Salesforce</td><td>Domain__c</td><td>—</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Four Data Paths -->
+                <div class="term" id="data-paths">
+                    <h3>The Four Data Paths</h3>
+                    <p>Understanding how data flows helps interpret reports correctly:</p>
+
+                    <div class="data-path">
+                        <div class="path-name">Contract Path</div>
+                        <div class="path-flow">Account → Contract → Contract Line Items</div>
+                        <div class="path-purpose">What was agreed</div>
+                    </div>
+
+                    <div class="data-path">
+                        <div class="path-name">Physical Path</div>
+                        <div class="path-flow">Account → Location (via Brand/Operator/Owner) → Zone</div>
+                        <div class="path-purpose">Where hardware is installed</div>
+                    </div>
+
+                    <div class="data-path">
+                        <div class="path-name">Billing Path</div>
+                        <div class="path-flow">Account → Billing Entity → Payment Method</div>
+                        <div class="path-purpose">How they pay</div>
+                    </div>
+
+                    <div class="data-path">
+                        <div class="path-name">Service Path</div>
+                        <div class="path-flow">Contract → Subscription → Zone → Product Line Items</div>
+                        <div class="path-purpose">What services are delivered</div>
+                    </div>
+                </div>
+
+                <!-- Deprecated Terminology -->
+                <div class="term" id="deprecated-terminology">
+                    <h3>Deprecated Terminology</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Legacy Term</th><th>Current Term</th><th>Notes</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Venue</td>
+                                <td><strong>Zone</strong></td>
+                                <td>"Venue" too easily confused with "Location"</td>
+                            </tr>
+                            <tr>
+                                <td>Ultimate_Parent</td>
+                                <td><strong>Top_Level_Parent__c</strong></td>
+                                <td>Use Top_Level_Parent__c for hierarchy calculations</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Key Principles -->
+                <div class="term" id="principles">
+                    <h3>Key Architectural Principles</h3>
+                    <div class="principles">
+                        <div class="principle"><strong>One Customer, One Account:</strong> Never duplicate accounts for payment changes</div>
+                        <div class="principle"><strong>Location Has Three Account Fields:</strong> Brand, Operator, Owner—use whichever apply</div>
+                        <div class="principle"><strong>Billing Entity is not Customer:</strong> Who gets invoiced is separate from business relationship</div>
+                        <div class="principle"><strong>Contract is not Subscription:</strong> Agreement vs. actual consumption</div>
+                        <div class="principle"><strong>No Double Counting:</strong> Contracted and Consumed ARR tracked separately</div>
+                        <div class="principle"><strong>Rates Flow from Contracts:</strong> Product Line Items inherit rates from Contract Line Items</div>
+                        <div class="principle"><strong>Zone, not Venue:</strong> Use "Zone" in all new documentation—"Venue" is deprecated</div>
+                        <div class="principle"><strong>Many-to-Many Zone-Subscription:</strong> One zone can have multiple subscriptions; one subscription can cover multiple zones</div>
+                        <div class="principle"><strong>Hierarchy Uses Top_Level_Parent__c:</strong> NOT Ultimate_Parent—calculated via batch jobs and formula fields</div>
+                        <div class="principle"><strong>Three Dates for ARR:</strong> Contract Date (forecasting), Service Billing Start (recognition), Activation Date (utilization)</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>Rockbot Business Glossary v5.0 — January 2026</p>
+        <p>Created by Revelate Operations, LLC</p>
+    </footer>
+
+    <div class="floating-actions">
+        <a href="https://docs.google.com/document/d/1rnjmfZ9ettNjQNh1icSdeV8nuxXnRTU1_M_3Okc5fHs/edit?tab=t.ja5zo7f9wu3s" target="_blank" class="doc-link" title="View in Google Docs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </a>
+        <a href="#top" class="back-to-top" title="Back to top">↑</a>
+    </div>
+
+    <script>
+        // Mobile Menu - Simple Toggle
+        var menuPanel = document.getElementById('mobile-menu-panel');
+        var menuToggle = document.getElementById('mobile-menu-toggle');
+        var menuClose = document.getElementById('mobile-menu-close');
+
+        if (menuToggle) {
+            menuToggle.onclick = function() {
+                menuPanel.classList.add('open');
+            };
+        }
+
+        if (menuClose) {
+            menuClose.onclick = function() {
+                menuPanel.classList.remove('open');
+            };
+        }
+
+        // Close menu when clicking a link
+        var mobileLinks = document.querySelectorAll('.mobile-link');
+        for (var i = 0; i < mobileLinks.length; i++) {
+            mobileLinks[i].onclick = function() {
+                menuPanel.classList.remove('open');
+            };
+        }
+
+        // Track all defined sections for scroll highlighting
+        const defined_sections = [
+            'purpose', 'three-questions', 'critical-distinctions',
+            'account', 'location', 'zone', 'contract', 'contract-line-item',
+            'subscription', 'product-line-item', 'billing-entity', 'payment-method',
+            'arr', 'guidelines', 'domain',
+            'brand-operator-owner', 'contracting-consuming',
+            'customer', 'partner', 'franchisor', 'franchisee',
+            'common-mistakes', 'system-of-record', 'data-paths', 'principles'
+        ];
+
+        // Map terms to their parent section for nav highlighting
+        const sectionMap = {
+            'purpose': 'preamble',
+            'three-questions': 'preamble',
+            'critical-distinctions': 'preamble',
+            'account': 'core-entities',
+            'location': 'core-entities',
+            'zone': 'core-entities',
+            'contract': 'core-entities',
+            'contract-line-item': 'core-entities',
+            'subscription': 'core-entities',
+            'product-line-item': 'core-entities',
+            'billing-entity': 'core-entities',
+            'payment-method': 'core-entities',
+            'arr': 'core-entities',
+            'guidelines': 'core-entities',
+            'domain': 'core-entities',
+            'brand-operator-owner': 'relationships',
+            'contracting-consuming': 'relationships',
+            'customer': 'business-roles',
+            'partner': 'business-roles',
+            'franchisor': 'business-roles',
+            'franchisee': 'business-roles',
+            'common-mistakes': 'quick-reference',
+            'system-of-record': 'quick-reference',
+            'data-paths': 'quick-reference',
+            'principles': 'quick-reference'
+        };
+
+        let currentActiveId = null;
+
+        function updateActiveStates(id) {
+            if (id === currentActiveId) return;
+            currentActiveId = id;
+
+            // Update sidebar
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+            });
+
+            // Update mobile nav
+            document.querySelectorAll('.mobile-nav a').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+            });
+
+            // Update top nav - highlight the parent section and the specific item
+            const parentSection = sectionMap[id];
+            
+            // Remove all active states from nav
+            document.querySelectorAll('.section-nav .nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.section-nav .dropdown a').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Add active to parent nav item
+            if (parentSection) {
+                const parentLink = document.querySelector(`.section-nav .nav-item > a[href="#${parentSection}"]`);
+                if (parentLink) {
+                    parentLink.parentElement.classList.add('active');
+                }
+            }
+
+            // Add active to specific dropdown item
+            const dropdownLink = document.querySelector(`.section-nav .dropdown a[href="#${id}"]`);
+            if (dropdownLink) {
+                dropdownLink.classList.add('active');
+            }
+        }
+
+        // Intersection observer for scroll tracking
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    if (id) updateActiveStates(id);
+                }
+            });
+        }, { threshold: 0.2, rootMargin: '-80px 0px -60% 0px' });
+
+        // Observe all terms and key sections
+        document.querySelectorAll('.term, #purpose, #three-questions, #critical-distinctions').forEach(section => {
+            if (section.id) observer.observe(section);
+        });
+
+        // Show/hide back to top button
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('visible', window.scrollY > 500);
+        });
+    </script>
+    <!-- Vercel Analytics -->
+    <script type="module">
+        import { inject } from 'https://cdn.jsdelivr.net/npm/@vercel/analytics@1/dist/index.mjs';
+        inject();
+    </script>
+</body>
+</html>
