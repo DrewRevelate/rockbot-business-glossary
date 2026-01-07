@@ -827,11 +827,6 @@ pre code {
    RESPONSIVE ADJUSTMENTS
    ───────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  /* Keep nav links visible on mobile for cross-page navigation */
-  .nav__links {
-    gap: var(--space-1);
-  }
-
   .hero-metric__value {
     font-size: clamp(2.5rem, 10vw, 4rem);
   }
@@ -892,13 +887,6 @@ pre code {
 
 .phase-marker--done {
   background: var(--color-success);
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   LEGACY PAGE HEADER (kept for backward compatibility)
-   ───────────────────────────────────────────────────────────────────────────── */
-.page-header {
-  display: none; /* Hidden - now using unified site-header */
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -1345,7 +1333,7 @@ pre code {
 
 /* Touch-friendly targets - ensure minimum 44px tap targets */
 @media (hover: none) and (pointer: coarse) {
-  .nav__link,
+  .site-header__link,
   .secondary-nav__link,
   .secondary-nav__pill,
   .checklist__checkbox {
@@ -1369,14 +1357,6 @@ pre code {
 
 /* Landscape mobile optimization */
 @media (max-height: 500px) and (orientation: landscape) {
-  .page-header {
-    padding: var(--space-4) 0 var(--space-3);
-  }
-
-  .page-header__badge {
-    display: none;
-  }
-
   .section {
     padding: var(--space-6) 0;
   }
@@ -1384,7 +1364,7 @@ pre code {
 
 /* High DPI / Retina displays */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .nav,
+  .site-header,
   .secondary-nav {
     border-bottom-width: 0.5px;
   }
